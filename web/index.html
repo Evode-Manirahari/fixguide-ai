@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FixGuide AI — Your Expert. In Your Ear.</title>
+  <style>
+    :root {
+      --bg: #040a0f;
+      --surface: #0a1520;
+      --surface2: #0f1e2d;
+      --border: #1a3a52;
+      --teal: #00d4aa;
+      --teal-dim: #007a63;
+      --teal-glow: rgba(0, 212, 170, 0.15);
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --font: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── grid bg ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(4, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 12px var(--teal);
+      animation: pulse 2s infinite;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    .nav-links a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--teal);
+      color: #040a0f;
+      border: none;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── hero ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 2rem 4rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 212, 170, 0.08);
+      border: 1px solid rgba(0, 212, 170, 0.25);
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      font-size: 0.78rem;
+      color: var(--teal);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      font-family: var(--mono);
+    }
+
+    .hero-badge .badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 1.5s infinite;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      max-width: 900px;
+    }
+
+    .hero h1 .accent {
+      background: linear-gradient(135deg, var(--teal) 0%, #00a884 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-quote {
+      font-size: 0.95rem;
+      color: var(--teal-dim);
+      font-style: italic;
+      margin-bottom: 3rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: #040a0f;
+      border: none;
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 30px rgba(0, 212, 170, 0.35);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    /* ── demo mockup ── */
+    .demo-wrap {
+      position: relative;
+      z-index: 1;
+      padding: 0 2rem 6rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .demo-frame {
+      width: 100%;
+      max-width: 1000px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,170,0.05);
+    }
+
+    .demo-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tbar-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .tbar-dot.r { background: #ff5f57; }
+    .tbar-dot.y { background: #ffbd2e; }
+    .tbar-dot.g { background: #28c840; }
+
+    .tbar-label {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    .demo-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 420px;
+    }
+
+    .demo-camera {
+      background: #000;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .demo-camera video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .demo-camera video.active { opacity: 1; }
+
+    .cam-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .cam-ring {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 2px solid rgba(0,212,170,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: ringPulse 2s infinite;
+    }
+
+    .cam-ring svg { width: 32px; height: 32px; color: var(--teal); }
+    .cam-placeholder-text { font-size: 0.8rem; color: var(--muted); }
+
+    /* corner brackets */
+    .cam-bracket {
+      position: absolute;
+      width: 24px; height: 24px;
+      border-color: var(--teal);
+      border-style: solid;
+      opacity: 0.6;
+    }
+    .cam-bracket.tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
+    .cam-bracket.tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; }
+    .cam-bracket.bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; }
+    .cam-bracket.br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
+
+    .demo-panel {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .verdict-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: 0.03em;
+    }
+
+    .verdict-badge.handle {
+      background: rgba(0,212,170,0.12);
+      border: 1px solid rgba(0,212,170,0.3);
+      color: var(--teal);
+    }
+
+    .verdict-badge.specialist {
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: var(--amber);
+    }
+
+    .verdict-badge.danger {
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: var(--red);
+    }
+
+    .ai-text {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 0.875rem;
+      line-height: 1.7;
+      color: var(--text);
+      min-height: 100px;
+      position: relative;
+    }
+
+    .ai-text .cursor {
+      display: inline-block;
+      width: 2px; height: 14px;
+      background: var(--teal);
+      margin-left: 2px;
+      animation: blink 1s infinite;
+      vertical-align: middle;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .step-item.active {
+      background: var(--teal-glow);
+      border-color: rgba(0,212,170,0.2);
+      color: var(--text);
+    }
+
+    .step-item.done {
+      color: var(--teal-dim);
+    }
+
+    .step-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    .step-item.active .step-num {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #040a0f;
+    }
+
+    .step-item.done .step-num {
+      background: var(--teal-glow);
+      border-color: var(--teal-dim);
+      color: var(--teal);
+    }
+
+    .wave-bar {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 28px;
+    }
+
+    .wave-bar span {
+      display: block;
+      width: 3px;
+      border-radius: 2px;
+      background: var(--teal);
+      animation: wave 1.2s ease-in-out infinite;
+    }
+
+    .wave-bar span:nth-child(1) { height: 8px; animation-delay: 0s; }
+    .wave-bar span:nth-child(2) { height: 18px; animation-delay: 0.1s; }
+    .wave-bar span:nth-child(3) { height: 24px; animation-delay: 0.2s; }
+    .wave-bar span:nth-child(4) { height: 16px; animation-delay: 0.3s; }
+    .wave-bar span:nth-child(5) { height: 22px; animation-delay: 0.4s; }
+    .wave-bar span:nth-child(6) { height: 10px; animation-delay: 0.5s; }
+    .wave-bar span:nth-child(7) { height: 20px; animation-delay: 0.6s; }
+
+    /* ── features ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 2rem;
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      font-family: var(--mono);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 4rem;
+      line-height: 1.7;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(0,212,170,0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    .feature-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--teal-glow);
+      border: 1px solid rgba(0,212,170,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── how it works ── */
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .how-grid::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(16.67% + 20px);
+      right: calc(16.67% + 20px);
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), var(--teal-dim), var(--border));
+    }
+
+    .how-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .how-num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .how-step h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .how-step p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── verdicts ── */
+    .verdicts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .verdict-card {
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+    }
+
+    .verdict-card.v-handle {
+      background: rgba(0,212,170,0.05);
+      border: 1px solid rgba(0,212,170,0.2);
+    }
+
+    .verdict-card.v-specialist {
+      background: rgba(245,158,11,0.05);
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+
+    .verdict-card.v-danger {
+      background: rgba(239,68,68,0.05);
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+
+    .verdict-card .v-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .verdict-card h3 {
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .verdict-card.v-handle h3 { color: var(--teal); }
+    .verdict-card.v-specialist h3 { color: var(--amber); }
+    .verdict-card.v-danger h3 { color: var(--red); }
+
+    .verdict-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── tech stack ── */
+    .tech-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .tech-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 10px 18px;
+      font-size: 0.85rem;
+      font-family: var(--mono);
+    }
+
+    .tech-pill .tp-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+    }
+
+    /* ── app section ── */
+    #app-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .app-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .app-frame {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .app-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 500px;
+    }
+
+    .app-cam {
+      background: #000;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+    }
+
+    #cameraFeed {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cam-ui {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .cam-status {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(4,10,15,0.85);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-family: var(--mono);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .cam-status.recording { color: var(--red); border-color: rgba(239,68,68,0.4); }
+    .cam-status.analyzing { color: var(--teal); border-color: rgba(0,212,170,0.4); }
+
+    .app-controls {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ctrl-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .ctrl-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .ctrl-btn:hover:not(:disabled) {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .ctrl-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .ctrl-btn.primary {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #040a0f;
+    }
+
+    .ctrl-btn.primary:hover:not(:disabled) {
+      opacity: 0.85;
+      color: #040a0f;
+    }
+
+    .key-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-family: var(--mono);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .key-input:focus { border-color: var(--teal); }
+    .key-input::placeholder { color: var(--muted); }
+
+    .key-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .output-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.83rem;
+      line-height: 1.7;
+      color: var(--muted);
+      min-height: 140px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: var(--font);
+      flex: 1;
+    }
+
+    .output-box .out-verdict {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .out-handle { color: var(--teal); }
+    .out-specialist { color: var(--amber); }
+    .out-danger { color: var(--red); }
+    .out-body { color: var(--text); }
+    .out-muted { color: var(--muted); }
+
+    .listen-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--teal);
+      font-family: var(--mono);
+      display: none;
+    }
+
+    .listen-indicator.visible { display: flex; }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      padding: 8rem 2rem;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      font-size: 1.1rem;
+    }
+
+    /* ── footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .footer-logo { font-weight: 700; color: var(--text); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: inherit; text-decoration: none; }
+    .footer-links a:hover { color: var(--teal); }
+
+    /* ── animations ── */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    @keyframes ringPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,170,0.3); }
+      50% { box-shadow: 0 0 0 16px rgba(0,212,170,0); }
+    }
+
+    @keyframes wave {
+      0%, 100% { transform: scaleY(0.5); }
+      50% { transform: scaleY(1); }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(0,212,170,0.3);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* ── responsive ── */
+    @media (max-width: 768px) {
+      .how-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .how-grid::before { display: none; }
+      .verdicts-grid { grid-template-columns: 1fr; }
+      .demo-body { grid-template-columns: 1fr; }
+      .app-body { grid-template-columns: 1fr; }
+      .app-cam { min-height: 240px; }
+      .nav-links { display: none; }
+    }
+
+    /* scroll reveal */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="dot"></div>
+    FixGuide AI
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#app">Try it</a>
+  </div>
+  <a href="#app" class="nav-cta">Try Live →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <div class="badge-dot"></div>
+    Cactus × Google DeepMind · Voice Agents Hackathon 2026
+  </div>
+  <h1>Your expert.<br><span class="accent">In your ear.</span></h1>
+  <p class="hero-sub">
+    Point your camera at any physical problem. FixGuide AI sees it, reasons about it,
+    and talks you through exactly what to do — step by step.
+  </p>
+  <p class="hero-quote">Like Neo downloading kung fu — point, listen, do.</p>
+  <div class="hero-actions">
+    <a href="#app" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Try Live
+    </a>
+    <a href="https://github.com/Evode-Manirahari/fixguide-ai" target="_blank" class="btn-secondary">View on GitHub</a>
+  </div>
+</section>
+
+<!-- DEMO MOCKUP -->
+<div class="demo-wrap reveal">
+  <div class="demo-frame">
+    <div class="demo-titlebar">
+      <div class="tbar-dot r"></div>
+      <div class="tbar-dot y"></div>
+      <div class="tbar-dot g"></div>
+      <span class="tbar-label">fixguide-ai · live session</span>
+    </div>
+    <div class="demo-body">
+      <div class="demo-camera">
+        <div class="cam-bracket tl"></div>
+        <div class="cam-bracket tr"></div>
+        <div class="cam-bracket bl"></div>
+        <div class="cam-bracket br"></div>
+        <div class="cam-overlay">
+          <div class="cam-ring">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </div>
+          <p class="cam-placeholder-text">Camera feed</p>
+        </div>
+      </div>
+      <div class="demo-panel">
+        <div class="verdict-badge handle">✓ HANDLE IT</div>
+        <div class="ai-text">
+          Leaky compression fitting under the sink. Tighten the nut a quarter turn clockwise with a wrench — don't overtighten. If still dripping, replace the O-ring (hardware store, under $2).<span class="cursor"></span>
+        </div>
+        <div class="steps-list">
+          <div class="step-item done">
+            <div class="step-num">✓</div>
+            Turn off water supply valve
+          </div>
+          <div class="step-item active">
+            <div class="step-num">2</div>
+            Tighten compression nut clockwise
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            Turn supply back on and check for drips
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:auto">
+          <div class="wave-bar">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <span style="font-size:0.75rem;color:var(--muted);font-family:var(--mono)">Listening...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-label">How it works</div>
+  <h2 class="section-title">Three steps. Zero confusion.</h2>
+  <p class="section-sub">No manual, no searching, no guessing. Just point and listen.</p>
+  <div class="how-grid reveal">
+    <div class="how-step">
+      <div class="how-num">📸</div>
+      <h3>Sees</h3>
+      <p>Through your camera. Identifies the problem, its state, and what's at risk — instantly.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">🧠</div>
+      <h3>Reasons</h3>
+      <p>Powered by Gemini Vision. Understands the full picture and decides the best path forward.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">🔊</div>
+      <h3>Talks</h3>
+      <p>Clear, calm, step-by-step instructions through your earpiece. Like an expert beside you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VERDICTS -->
+<section style="padding-top:0">
+  <div class="section-label">One verdict. Always clear.</div>
+  <h2 class="section-title">No ambiguity. Ever.</h2>
+  <p class="section-sub">Every situation gets exactly one of three responses — so you always know what to do next.</p>
+  <div class="verdicts-grid reveal">
+    <div class="verdict-card v-handle">
+      <div class="v-icon">✓</div>
+      <h3>Handle it</h3>
+      <p>You can do this. FixGuide walks you through it, one step at a time, adapting if something goes wrong.</p>
+    </div>
+    <div class="verdict-card v-specialist">
+      <div class="v-icon">📞</div>
+      <h3>Call specialist</h3>
+      <p>This needs a pro. You get told who, why, and how urgent — plus a ready-to-send work order.</p>
+    </div>
+    <div class="verdict-card v-danger">
+      <div class="v-icon">⚠️</div>
+      <h3>Danger</h3>
+      <p>Stop. FixGuide flags hazards before you make it worse — and tells you exactly what not to touch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Built for the field.</h2>
+  <p class="section-sub">Everything a field worker or homeowner actually needs — nothing they don't.</p>
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <div class="feature-icon">🎤</div>
+      <h3>Fully hands-free</h3>
+      <p>Voice-operated end to end. Say "start" to begin, respond with "yes" or describe an issue — your hands never leave the work.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <h3>Adaptive step tracker</h3>
+      <p>One step at a time. If something doesn't work, describe the issue and get an instant fix — not a restart.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Instant work orders</h3>
+      <p>When a specialist is needed, get a plain-language work order ready to text a contractor in seconds.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌐</div>
+      <h3>Universal</h3>
+      <p>Plumbing, electrical, HVAC, appliances, vehicles, equipment — any physical problem in any domain.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>No webcam? No problem</h3>
+      <p>AirDrop a photo from your phone, drop in the path, and get the same full analysis.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🗂</div>
+      <h3>Session history</h3>
+      <p>Every job is logged locally. See your recent sessions on startup — with verdict, description, and timestamp.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section style="padding-top:0">
+  <div class="section-label">Tech stack</div>
+  <h2 class="section-title">On-device + cloud.</h2>
+  <p class="section-sub">Cactus runs Gemma on-device for low latency. Gemini Vision handles the heavy reasoning.</p>
+  <div class="tech-grid reveal">
+    <div class="tech-pill"><div class="tp-dot"></div>Gemma 270M · on-device</div>
+    <div class="tech-pill"><div class="tp-dot"></div>Gemini 2.0 Flash · vision</div>
+    <div class="tech-pill"><div class="tp-dot"></div>Cactus · inference engine</div>
+    <div class="tech-pill"><div class="tp-dot"></div>sounddevice · mic input</div>
+    <div class="tech-pill"><div class="tp-dot"></div>SpeechRecognition · STT</div>
+    <div class="tech-pill"><div class="tp-dot"></div>OpenCV · camera capture</div>
+    <div class="tech-pill"><div class="tp-dot"></div>macOS say · TTS earpiece</div>
+    <div class="tech-pill"><div class="tp-dot"></div>Web Speech API · browser</div>
+  </div>
+</section>
+
+<!-- LIVE APP -->
+<section id="app" id="app-section">
+  <div class="app-wrap">
+    <div class="section-label" style="text-align:center">Live demo</div>
+    <h2 class="section-title">Try it right now.</h2>
+    <p class="section-sub">Point your camera at any problem. Enter your Gemini API key. Get instant guidance.</p>
+    <div class="app-frame reveal">
+      <div class="demo-titlebar">
+        <div class="tbar-dot r"></div>
+        <div class="tbar-dot y"></div>
+        <div class="tbar-dot g"></div>
+        <span class="tbar-label" id="appStatus">ready</span>
+      </div>
+      <div class="app-body">
+        <div class="app-cam">
+          <video id="cameraFeed" autoplay muted playsinline></video>
+          <div class="cam-ui">
+            <div class="cam-bracket tl"></div>
+            <div class="cam-bracket tr"></div>
+            <div class="cam-bracket bl"></div>
+            <div class="cam-bracket br"></div>
+            <div class="cam-status" id="camStatus">click Start Camera</div>
+          </div>
+        </div>
+        <div class="app-controls">
+          <div>
+            <div class="key-label">Gemini API Key (stays in your browser only)</div>
+            <input type="password" id="apiKey" class="key-input" placeholder="AIza..." />
+          </div>
+          <div class="ctrl-row">
+            <button class="ctrl-btn" id="btnCamera" onclick="startCamera()">
+              📷 Start Camera
+            </button>
+            <button class="ctrl-btn primary" id="btnAnalyze" onclick="analyzeScene()" disabled>
+              🧠 Analyze
+            </button>
+          </div>
+          <div class="ctrl-row">
+            <button class="ctrl-btn" id="btnVoice" onclick="toggleVoice()" disabled>
+              🎤 Voice Input
+            </button>
+            <button class="ctrl-btn" id="btnSpeak" onclick="speakOutput()" disabled>
+              🔊 Read Aloud
+            </button>
+          </div>
+          <div class="listen-indicator" id="listenIndicator">
+            <div class="wave-bar" style="height:20px">
+              <span style="animation-duration:0.8s"></span>
+              <span style="animation-duration:1s"></span>
+              <span style="animation-duration:0.9s"></span>
+              <span style="animation-duration:1.1s"></span>
+              <span style="animation-duration:0.85s"></span>
+            </div>
+            <span>Listening...</span>
+          </div>
+          <div class="output-box" id="output">
+            <span class="out-muted">Your analysis will appear here...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section reveal">
+  <h2>Ready to deploy it?</h2>
+  <p>Full source on GitHub. Run on macOS in 5 minutes.</p>
+  <div class="hero-actions" style="justify-content:center">
+    <a href="https://github.com/Evode-Manirahari/fixguide-ai" target="_blank" class="btn-primary">View on GitHub</a>
+    <a href="https://github.com/Evode-Manirahari/fixguide-ai#setup" target="_blank" class="btn-secondary">Setup Guide</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">FixGuide AI</div>
+  <div class="footer-links">
+    <a href="https://github.com/Evode-Manirahari/fixguide-ai" target="_blank">GitHub</a>
+    <a href="https://cactus.run" target="_blank">Cactus</a>
+    <a href="https://deepmind.google" target="_blank">Google DeepMind</a>
+  </div>
+  <span>Built at Cactus × Google DeepMind Hackathon · April 2026</span>
+</footer>
+
+<script>
+  // ── scroll reveal ──
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.1 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── camera ──
+  let stream = null;
+  let voiceRecognition = null;
+  let lastOutput = '';
+
+  async function startCamera() {
+    const btn = document.getElementById('btnCamera');
+    const feed = document.getElementById('cameraFeed');
+    const status = document.getElementById('camStatus');
+
+    if (stream) {
+      stream.getTracks().forEach(t => t.stop());
+      stream = null;
+      feed.srcObject = null;
+      btn.textContent = '📷 Start Camera';
+      status.textContent = 'camera off';
+      status.className = 'cam-status';
+      document.getElementById('btnAnalyze').disabled = true;
+      return;
+    }
+
+    try {
+      btn.innerHTML = '<div class="spinner"></div> Starting...';
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+      feed.srcObject = stream;
+      btn.textContent = '⏹ Stop Camera';
+      status.textContent = '● live';
+      status.className = 'cam-status analyzing';
+      document.getElementById('btnAnalyze').disabled = false;
+      document.getElementById('btnVoice').disabled = false;
+    } catch (e) {
+      btn.textContent = '📷 Start Camera';
+      status.textContent = 'permission denied';
+      setOutput('<span class="out-danger">Camera access denied. Allow camera in browser settings and try again.</span>');
+    }
+  }
+
+  function captureFrame() {
+    const feed = document.getElementById('cameraFeed');
+    const canvas = document.createElement('canvas');
+    canvas.width = feed.videoWidth || 640;
+    canvas.height = feed.videoHeight || 480;
+    canvas.getContext('2d').drawImage(feed, 0, 0);
+    return canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+  }
+
+  // ── analyze ──
+  async function analyzeScene(extra) {
+    const key = document.getElementById('apiKey').value.trim();
+    if (!key) {
+      setOutput('<span class="out-danger">Enter your Gemini API key above first.</span>');
+      return;
+    }
+
+    const btn = document.getElementById('btnAnalyze');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Analyzing...';
+    document.getElementById('appStatus').textContent = 'analyzing...';
+    setOutput('<span class="out-muted">Thinking...</span>');
+
+    const prompt = extra
+      ? `Context from previous analysis. Follow-up question or feedback: ${extra}`
+      : 'What do you see? Assess the situation and tell me what to do.';
+
+    const systemPrompt = `You are an instant expert — like Neo downloading kung fu in The Matrix.
+The moment you see something through a camera, you know exactly what it is, what state it's in, and precisely what the person needs to do.
+
+Your job:
+- Look at what's in front of the person
+- Understand the situation immediately
+- Give ONE clear verdict: safe to handle alone, or needs a specialist
+- If they can handle it: guide them step by step (numbered 1. 2. 3.)
+- If it needs a specialist: say who, why, and how urgent
+- If there's danger: say so FIRST, immediately
+
+Rules:
+- Speak like an expert whispering in their ear — calm, clear, confident
+- Never overwhelm. One thing at a time.
+- Flag any danger immediately, before anything else
+- Under 120 words — this goes straight to their earpiece`;
+
+    try {
+      const body = {
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents: [],
+      };
+
+      if (stream) {
+        const b64 = captureFrame();
+        body.contents = [{
+          parts: [
+            { inline_data: { mime_type: 'image/jpeg', data: b64 } },
+            { text: prompt },
+          ]
+        }];
+      } else {
+        body.contents = [{ parts: [{ text: prompt }] }];
+      }
+
+      const models = ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-2.5-flash'];
+      let response, text;
+
+      for (const model of models) {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+        );
+        const data = await res.json();
+        if (data.error) {
+          if (data.error.code === 429) { continue; }
+          throw new Error(data.error.message);
+        }
+        text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (text) { response = text; break; }
+      }
+
+      if (!response) throw new Error('All models exhausted. Check your API key.');
+
+      lastOutput = response;
+      renderOutput(response);
+      document.getElementById('btnSpeak').disabled = false;
+      document.getElementById('appStatus').textContent = 'analysis complete';
+
+    } catch (e) {
+      setOutput(`<span class="out-danger">Error: ${e.message}</span>`);
+      document.getElementById('appStatus').textContent = 'error';
+    }
+
+    btn.textContent = '🧠 Analyze';
+    btn.disabled = false;
+  }
+
+  function renderOutput(text) {
+    const upper = text.toUpperCase();
+    let verdictHtml = '';
+    let verdictClass = '';
+
+    if (upper.includes('DANGER') || upper.includes('STOP') || upper.includes('DO NOT') || upper.includes('HAZARD')) {
+      verdictHtml = '<div class="out-verdict out-danger">⚠️ DANGER</div>';
+      verdictClass = 'out-danger';
+    } else if (upper.includes('SPECIALIST') || upper.includes('PROFESSIONAL') || upper.includes('ELECTRICIAN') || upper.includes('CALL')) {
+      verdictHtml = '<div class="out-verdict out-specialist">📞 CALL SPECIALIST</div>';
+    } else {
+      verdictHtml = '<div class="out-verdict out-handle">✓ HANDLE IT</div>';
+    }
+
+    document.getElementById('output').innerHTML = verdictHtml + '<div class="out-body">' + text.replace(/\n/g, '<br>') + '</div>';
+  }
+
+  function setOutput(html) {
+    document.getElementById('output').innerHTML = html;
+  }
+
+  // ── voice ──
+  function toggleVoice() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Voice input not supported in this browser. Use Chrome.');
+      return;
+    }
+
+    const btn = document.getElementById('btnVoice');
+    const indicator = document.getElementById('listenIndicator');
+
+    if (voiceRecognition) {
+      voiceRecognition.stop();
+      voiceRecognition = null;
+      btn.textContent = '🎤 Voice Input';
+      indicator.classList.remove('visible');
+      return;
+    }
+
+    voiceRecognition = new SpeechRecognition();
+    voiceRecognition.continuous = false;
+    voiceRecognition.interimResults = false;
+
+    voiceRecognition.onstart = () => {
+      btn.textContent = '⏹ Stop';
+      indicator.classList.add('visible');
+    };
+
+    voiceRecognition.onresult = e => {
+      const transcript = e.results[0][0].transcript;
+      analyzeScene(transcript);
+    };
+
+    voiceRecognition.onend = () => {
+      btn.textContent = '🎤 Voice Input';
+      indicator.classList.remove('visible');
+      voiceRecognition = null;
+    };
+
+    voiceRecognition.start();
+  }
+
+  // ── speak ──
+  function speakOutput() {
+    if (!lastOutput) return;
+    const utterance = new SpeechSynthesisUtterance(lastOutput);
+    utterance.rate = 1.05;
+    utterance.pitch = 1;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  }
+</script>
+</body>
+</html>
