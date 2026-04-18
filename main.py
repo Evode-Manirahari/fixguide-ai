@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""FixGuide AI — Multi-mode voice+vision repair, safety & car agent."""
+"""
+FixGuide AI — Your expert in your ear.
+
+Sees through your camera. Reasons about what's in front of you.
+Talks you through it, step by step.
+"""
 
 import os
 import re
@@ -20,78 +25,42 @@ GEMINI_MODELS = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-2.5-flash"
 HISTORY_FILE = REPO_ROOT / "history.json"
 
 BANNER = """
-╔══════════════════════════════════════════════════════╗
-║               🔧  FixGuide AI  🔧                    ║
-║     On-device voice + vision repair assistant       ║
-╚══════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════╗
+║                  FixGuide AI                             ║
+║           Your expert. In your ear.                     ║
+╚══════════════════════════════════════════════════════════╝
 """
 
-MODES = {
-    "1": {
-        "name": "🔧  Repair Guide",
-        "desc": "Home & workplace repair assistant",
-        "system": (
-            "You are FixGuide AI, an expert repair assistant for field workers and homeowners. "
-            "When shown a repair situation:\n"
-            "1. Identify what you see in one sentence.\n"
-            "2. Give a SAFETY VERDICT: 'DIY SAFE ✓' or 'CALL A PROFESSIONAL ⚠️'\n"
-            "3. If DIY safe, give up to 5 numbered steps, each concise.\n"
-            "4. If professional needed, state: type of professional, estimated cost range, urgency.\n"
-            "5. Add one safety warning if relevant.\n"
-            "Keep total response under 150 words — it will be spoken aloud."
-        ),
-        "welcome": "Repair Guide ready. Show me what needs fixing.",
-        "photo_prompt": "Point camera at the repair area.",
-        "voice_prompt": "Describe what needs fixing.",
-    },
-    "2": {
-        "name": "🦺  Safety Inspector",
-        "desc": "Construction site hazard detection",
-        "system": (
-            "You are SafeJob AI, an expert construction and workplace safety inspector. "
-            "When shown a work site or task:\n"
-            "1. Identify the work environment in one sentence.\n"
-            "2. Give a SAFETY VERDICT: 'SAFE TO PROCEED ✓' or 'STOP — HAZARD DETECTED ⚠️'\n"
-            "3. List up to 3 specific hazards found (or 'No hazards identified').\n"
-            "4. List required PPE for this job.\n"
-            "5. One critical safety rule for this task.\n"
-            "Keep total response under 120 words — it will be spoken aloud."
-        ),
-        "welcome": "Safety Inspector ready. Show me the work site.",
-        "photo_prompt": "Point camera at the work area or hazard.",
-        "voice_prompt": "Describe the task you are about to perform.",
-    },
-    "3": {
-        "name": "🚗  Car Mechanic",
-        "desc": "Vehicle diagnostics and repair guidance",
-        "system": (
-            "You are MechGuide AI, an expert automotive mechanic assistant. "
-            "When shown a vehicle issue:\n"
-            "1. Identify the vehicle part or symptom in one sentence.\n"
-            "2. Give a REPAIR VERDICT: 'DIY REPAIR ✓' or 'SEE A MECHANIC ⚠️'\n"
-            "3. If DIY: give up to 5 numbered repair steps.\n"
-            "4. Estimated parts cost range in USD.\n"
-            "5. Urgency: 'Drive safely' / 'Fix within X days' / 'Stop driving immediately'.\n"
-            "Keep total response under 150 words — it will be spoken aloud."
-        ),
-        "welcome": "Car Mechanic ready. Show me the problem.",
-        "photo_prompt": "Point camera at the car issue — under hood, tire, dashboard, etc.",
-        "voice_prompt": "Describe the symptom — what sound, warning light, or what happened.",
-    },
-}
+SYSTEM_PROMPT = """
+You are an instant expert — like Neo downloading kung fu in The Matrix.
+The moment you see something through a camera, you know exactly what it is,
+what state it's in, and precisely what the person in front of it needs to do.
 
-FOLLOWUP_SYSTEM = (
-    "You are a helpful repair and safety assistant. Answer follow-up questions clearly "
-    "and briefly. Under 80 words. Will be spoken aloud."
-)
-WORK_ORDER_SYSTEM = (
-    "Generate a concise contractor work order a homeowner can send via text or email. "
-    "Include: problem, location hint, urgency. Plain text, under 60 words."
-)
-TROUBLESHOOT_SYSTEM = (
-    "You are a repair assistant. A step failed. Give one short alternative approach "
-    "or tip. Under 50 words. Will be spoken aloud."
-)
+Your job:
+- Look at what's in front of the person
+- Understand the situation immediately
+- Give ONE clear verdict: safe to handle alone, or needs a specialist
+- If they can handle it: guide them one step at a time, spoken clearly
+- If it needs a specialist: say who, why, and how urgent
+
+Rules:
+- Speak like an expert whispering in their ear — calm, clear, confident
+- Never overwhelm. One thing at a time.
+- Flag any danger immediately, before anything else
+- Under 120 words per response — this goes straight to their earpiece
+"""
+
+STEP_PROMPT = """
+You are guiding someone through a physical task step by step.
+They just attempted a step and gave feedback.
+Give ONE short follow-up: next step if it worked, or a fix if it didn't.
+Under 40 words. Spoken aloud directly into their ear.
+"""
+
+WORK_ORDER_PROMPT = """
+Write a short work order a person can text to a contractor right now.
+Problem, location hint, urgency level. Plain text. Under 50 words.
+"""
 
 
 # ── history ──────────────────────────────────────────────────────────────────
@@ -105,11 +74,10 @@ def load_history() -> list:
     return []
 
 
-def save_session(mode_name: str, question: str, response: str, verdict: str):
+def save_session(question: str, response: str, verdict: str):
     history = load_history()
     history.append({
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "mode": mode_name,
+        "time": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "question": question[:80],
         "verdict": verdict,
         "summary": response[:200],
@@ -121,47 +89,57 @@ def show_history():
     history = load_history()
     if not history:
         return
-    print("📋 Recent Sessions:")
-    for entry in history[-3:]:
-        print(f"  {entry['timestamp']}  [{entry['mode']}]  {entry['verdict']}")
-        print(f"    \"{entry['question']}\"")
-    print()
+    print("Recent sessions:")
+    for e in history[-3:]:
+        print(f"  {e['time']}  {e['verdict']}")
+        print(f"  \"{e['question']}\"\n")
 
 
 def extract_verdict(response: str) -> str:
-    for keyword in ["DIY SAFE", "CALL A PROFESSIONAL", "SAFE TO PROCEED",
-                    "STOP — HAZARD", "DIY REPAIR", "SEE A MECHANIC"]:
-        if keyword in response.upper():
-            return keyword
-    return "ANALYZED"
+    upper = response.upper()
+    if any(w in upper for w in ["DANGER", "STOP", "DO NOT", "HAZARD"]):
+        return "⚠️  DANGER"
+    if any(w in upper for w in ["SPECIALIST", "PROFESSIONAL", "MECHANIC", "ELECTRICIAN", "CALL"]):
+        return "📞 CALL SPECIALIST"
+    return "✓  HANDLE IT"
 
 
-# ── I/O helpers ──────────────────────────────────────────────────────────────
+def extract_steps(response: str) -> list[str]:
+    steps = []
+    for line in response.split("\n"):
+        line = line.strip()
+        if re.match(r"^\d+[\.\)]", line):
+            step_text = re.sub(r"^\d+[\.\)]\s*", "", line)
+            if step_text:
+                steps.append(step_text)
+    return steps
+
+
+# ── I/O ──────────────────────────────────────────────────────────────────────
 
 def speak(text: str):
     clean = text.replace('"', "'").replace("\n", " ")
     subprocess.run(["say", "-r", "175", clean], check=False)
 
 
-def record_voice(seconds: int = 7) -> str:
+def listen(seconds: int = 7, label: str = "Listening") -> str:
     import sounddevice as sd
     import soundfile as sf
-    sample_rate = 16000
-    print(f"  🎤 Listening for {seconds}s...", flush=True)
-    audio = sd.rec(int(seconds * sample_rate), samplerate=sample_rate, channels=1, dtype="int16")
+    sr = 16000
+    print(f"  🎤 {label} ({seconds}s)...", flush=True)
+    audio = sd.rec(int(seconds * sr), samplerate=sr, channels=1, dtype="int16")
     sd.wait()
     tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
-    sf.write(tmp.name, audio, sample_rate)
-    return tmp.name
+    sf.write(tmp.name, audio, sr)
 
-
-def transcribe_audio(audio_path: str) -> str:
-    import speech_recognition as sr
-    r = sr.Recognizer()
-    with sr.AudioFile(audio_path) as source:
-        audio = r.record(source)
+    import speech_recognition as speech
+    r = speech.Recognizer()
+    with speech.AudioFile(tmp.name) as src:
+        data = r.record(src)
     try:
-        return r.recognize_google(audio)
+        result = r.recognize_google(data)
+        print(f"  🗣  \"{result}\"")
+        return result
     except Exception:
         return ""
 
@@ -179,278 +157,202 @@ def capture_image() -> str | None:
             return tmp.name
     except Exception:
         pass
-    print("\n  📱 Webcam unavailable. AirDrop or save a photo from your phone,")
-    print("     enter the full path (or press Enter to skip).\n")
-    path = input("  Image path: ").strip().strip("'\"")
-    if path and Path(path).exists():
-        return path
-    return None
+
+    print("\n  📱 No webcam. Send a photo from your phone (AirDrop → Downloads)")
+    print("     then enter the path, or press Enter to skip.\n")
+    path = input("  Path: ").strip().strip("'\"")
+    return path if path and Path(path).exists() else None
 
 
-def voice_input(prompt: str, seconds: int = 5, voice_mode: bool = False) -> str:
-    """Get input by voice (voice_mode) or keyboard."""
-    if voice_mode:
-        speak(prompt)
-        audio_path = record_voice(seconds)
-        result = transcribe_audio(audio_path)
-        if result:
-            print(f"  🗣  Heard: \"{result}\"")
-        return result
-    else:
-        print(f"  {prompt}")
-        return input("  > ").strip().lower()
+# ── AI ───────────────────────────────────────────────────────────────────────
 
-
-# ── AI engines ───────────────────────────────────────────────────────────────
-
-def load_on_device_model():
+def load_model():
     try:
         from src.cactus import cactus_init, cactus_log_set_level
         cactus_log_set_level(4)
         return cactus_init(str(WEIGHTS_DIR), None, False)
-    except Exception as e:
-        print(f"  ⚠️  On-device model unavailable ({e.__class__.__name__}). Using cloud only.")
+    except Exception:
+        print("  ⚠️  On-device model unavailable. Cloud only.")
         return None
 
 
-def _gemini_generate(contents, system_prompt: str) -> str:
+def _generate(contents, system: str) -> str:
     from google import genai
     from google.genai import types
     client = genai.Client(api_key=GEMINI_API_KEY)
     for model in GEMINI_MODELS:
         try:
-            response = client.models.generate_content(
+            r = client.models.generate_content(
                 model=model,
-                config=types.GenerateContentConfig(system_instruction=system_prompt),
+                config=types.GenerateContentConfig(system_instruction=system),
                 contents=contents,
             )
-            return response.text.strip()
+            return r.text.strip()
         except Exception as e:
             if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                print(f"  ⚠️  {model} quota hit, trying next model...")
+                print(f"  ⚠️  {model} quota hit, trying next...")
                 continue
             raise
-    return "All Gemini models are rate-limited. Please wait a moment and try again."
+    return "I'm having trouble connecting. Please check your API key and try again."
 
 
-def ask_gemini_vision(image_path: str, question: str, system_prompt: str) -> str:
+def analyze(image_path: str | None, question: str) -> str:
     from google.genai import types
-    mime = "image/jpeg" if image_path.lower().endswith((".jpg", ".jpeg")) else "image/png"
-    with open(image_path, "rb") as f:
-        img_bytes = f.read()
-    return _gemini_generate(
-        contents=[
-            types.Part.from_bytes(data=img_bytes, mime_type=mime),
-            types.Part.from_text(text=question or "Analyze this and guide me."),
-        ],
-        system_prompt=system_prompt,
+    if image_path:
+        mime = "image/jpeg" if image_path.lower().endswith((".jpg", ".jpeg")) else "image/png"
+        with open(image_path, "rb") as f:
+            img = f.read()
+        return _generate(
+            contents=[
+                types.Part.from_bytes(data=img, mime_type=mime),
+                types.Part.from_text(text=question or "What do you see? What should I do?"),
+            ],
+            system=SYSTEM_PROMPT,
+        )
+    return _generate(contents=[question], system=SYSTEM_PROMPT)
+
+
+def followup(question: str, context: str) -> str:
+    return _generate(
+        contents=[f"Context: {context}\n\nFeedback: {question}"],
+        system=STEP_PROMPT,
     )
 
 
-def ask_gemini_text(question: str, context: str, system_prompt: str) -> str:
-    content = f"Prior context: {context}\n\nQuestion: {question}" if context else question
-    return _gemini_generate(contents=[content], system_prompt=system_prompt)
-
-
-def generate_work_order(analysis: str, question: str) -> str:
-    return _gemini_generate(
-        contents=[f"Repair assessment: {analysis}\nUser described: {question}"],
-        system_prompt=WORK_ORDER_SYSTEM,
+def work_order(analysis: str, question: str) -> str:
+    return _generate(
+        contents=[f"Situation: {analysis}\nDescription: {question}"],
+        system=WORK_ORDER_PROMPT,
     )
 
 
-# ── step-by-step guidance ────────────────────────────────────────────────────
+# ── step guide ───────────────────────────────────────────────────────────────
 
-def extract_steps(response: str) -> list[str]:
-    steps = []
-    for line in response.split("\n"):
-        line = line.strip()
-        if re.match(r"^\d+[\.\)]", line):
-            step_text = re.sub(r"^\d+[\.\)]\s*", "", line)
-            if step_text:
-                steps.append(step_text)
-    return steps
-
-
-def guide_steps(steps: list[str], voice_mode: bool):
-    if not steps:
-        return
-    print(f"\n  📍 Guiding you through {len(steps)} steps one by one...\n")
+def guide_steps(steps: list[str], voice_only: bool):
+    print(f"\n  Guiding you through {len(steps)} steps...\n")
     for i, step in enumerate(steps):
-        print(f"  Step {i+1}/{len(steps)}: {step}")
+        print(f"  [{i+1}/{len(steps)}] {step}")
         speak(f"Step {i + 1}. {step}")
 
-        if i < len(steps) - 1:
-            feedback = voice_input(
-                "Did that work? Say yes to continue, or describe any issue.",
-                seconds=6, voice_mode=voice_mode
-            )
-            if not feedback:
-                speak("Moving to next step.")
-                continue
+        if i == len(steps) - 1:
+            speak("That's the last step. Well done.")
+            break
 
-            negative = any(w in feedback.lower() for w in
-                           ["no", "not", "didn't", "failed", "problem", "issue", "wrong", "stuck"])
-            if negative:
-                print("  💡 Troubleshooting...")
-                tip = ask_gemini_text(
-                    f"Step '{step}' failed. User said: '{feedback}'. One short alternative tip.",
-                    "", TROUBLESHOOT_SYSTEM
-                )
-                print(f"  💡 {tip}")
-                speak(tip)
-            else:
-                speak("Great. Moving to next step.")
+        speak("Did that work?")
+        if voice_only:
+            feedback = listen(seconds=5, label="Hearing your feedback")
+        else:
+            feedback = input("  (yes / describe issue): ").strip().lower()
 
-    speak("All steps complete! Well done.")
-    print("\n  ✅ All steps complete!\n")
+        if not feedback or any(w in feedback for w in ["yes", "done", "worked", "good", "ok", "great"]):
+            speak("Good. Next step.")
+        else:
+            tip = followup(feedback, step)
+            print(f"  💡 {tip}")
+            speak(tip)
+    print()
 
 
 # ── session ──────────────────────────────────────────────────────────────────
 
-def run_session(model, mode: dict, voice_mode: bool):
-    # Step 1: image
-    speak(mode["photo_prompt"] + " Taking photo in 3 seconds.")
-    print(f"\n📸 {mode['photo_prompt']} (3 seconds...)")
+def run(model, voice_only: bool):
+    # 1 — look
+    speak("Point your camera. Taking photo in 3 seconds.")
+    print("\n  📸 Taking photo in 3 seconds...")
     time.sleep(3)
     image_path = capture_image()
-    print(f"  ✓ Image ready" if image_path else "  ⚠️  No image.")
-    if not image_path:
-        speak("No image. Please describe in detail.")
+    print("  ✓ Got it." if image_path else "  No image — going voice only.")
 
-    # Step 2: voice question
-    speak(mode["voice_prompt"])
-    audio_path = record_voice(seconds=7)
-    question = transcribe_audio(audio_path)
-    if question:
-        print(f'\n  🗣  You said: "{question}"')
-    else:
-        question = "Analyze this and guide me safely."
-        print("  (Could not understand — using default question)")
+    # 2 — listen
+    speak("What's going on? Tell me.")
+    question = listen(seconds=7, label="Describe the situation")
+    if not question:
+        question = "What do you see? What should I do next?"
 
-    # Step 3: analyze
-    print("\n  🤖 Analyzing...")
-    if image_path and GEMINI_API_KEY:
-        response = ask_gemini_vision(image_path, question, mode["system"])
-    elif GEMINI_API_KEY:
-        response = ask_gemini_text(question, "", mode["system"])
-    else:
-        response = "Cloud AI unavailable. Please check your GEMINI_API_KEY."
-
+    # 3 — reason
+    print("\n  🧠 Thinking...\n")
+    response = analyze(image_path, question)
     verdict = extract_verdict(response)
-    print(f"\n{'─'*52}\n{response}\n{'─'*52}\n")
+
+    print(f"  {verdict}\n")
+    print(f"  {response}\n")
     speak(response)
 
-    # Save to history
-    save_session(mode["name"].replace("  ", " ").strip(), question, response, verdict)
+    save_session(question, response, verdict)
 
-    # Step-by-step guidance if DIY safe
-    diy = any(w in response.upper() for w in ["DIY SAFE", "SAFE TO PROCEED", "DIY REPAIR"])
-    if diy:
+    # 4 — step guide if handleable
+    if "HANDLE IT" in verdict:
         steps = extract_steps(response)
         if steps:
-            confirm = voice_input(
-                "Want me to guide you step by step? Say yes or no.",
-                seconds=4, voice_mode=voice_mode
-            )
-            if "yes" in confirm.lower() or "yeah" in confirm.lower():
-                guide_steps(steps, voice_mode)
+            speak("Want me to walk you through it step by step?")
+            confirm = listen(seconds=4, label="Say yes or no") if voice_only else input("  Step by step? (y/n): ").strip().lower()
+            if "y" in confirm:
+                guide_steps(steps, voice_only)
 
-    # Work order if professional needed
-    needs_pro = any(w in response.upper() for w in
-                    ["CALL A PROFESSIONAL", "SEE A MECHANIC", "STOP — HAZARD"])
-    if needs_pro and GEMINI_API_KEY:
-        confirm = voice_input(
-            "Want me to generate a work order to send to a professional? Say yes or no.",
-            seconds=4, voice_mode=voice_mode
-        )
-        if "yes" in confirm.lower() or "yeah" in confirm.lower():
-            print("  📋 Generating work order...")
-            work_order = generate_work_order(response, question)
-            print(f"\n  📋 WORK ORDER:\n  {work_order}\n")
-            speak("Here is your work order. " + work_order)
+    # 5 — work order if specialist needed
+    if "SPECIALIST" in verdict:
+        speak("Want me to write a work order you can send right now?")
+        confirm = listen(seconds=4, label="Say yes or no") if voice_only else input("  Generate work order? (y/n): ").strip().lower()
+        if "y" in confirm:
+            order = work_order(response, question)
+            print(f"\n  📋 Work order:\n  {order}\n")
+            speak("Here is your work order. " + order)
 
-    # Follow-up loop
-    session_context = response
+    # 6 — follow-up
+    context = response
     while True:
-        followup = voice_input(
-            "Any follow-up questions? Say done to finish.",
-            seconds=6, voice_mode=voice_mode
-        )
-        if not followup:
+        speak("Anything else?")
+        q = listen(seconds=6, label="Ask anything") if voice_only else input("  Follow-up (or Enter to finish): ").strip()
+
+        if not q or any(w in q.lower() for w in ["no", "done", "quit", "bye", "finish", "stop", "thank"]):
+            speak("Got it. You're good.")
             break
-        print(f'\n  🗣  Follow-up: "{followup}"')
-        if any(w in followup.lower() for w in ["done", "finish", "stop", "no", "quit", "thank", "bye"]):
-            speak("Session complete. Stay safe.")
-            break
-        answer = ask_gemini_text(followup, session_context, FOLLOWUP_SYSTEM)
+
+        answer = followup(q, context)
         print(f"\n  {answer}\n")
         speak(answer)
-        session_context += f" {answer}"
+        context += f" {answer}"
 
 
 # ── main ─────────────────────────────────────────────────────────────────────
-
-def select_mode() -> dict:
-    print("\nSelect a mode:\n")
-    for key, mode in MODES.items():
-        print(f"  [{key}] {mode['name']} — {mode['desc']}")
-    print()
-    while True:
-        choice = input("  Enter 1, 2, or 3: ").strip()
-        if choice in MODES:
-            return MODES[choice]
-        print("  Please enter 1, 2, or 3.")
-
 
 def main():
     print(BANNER)
 
     if not GEMINI_API_KEY:
-        print("⚠️  GEMINI_API_KEY not set — run: export GEMINI_API_KEY='your-key'\n")
+        print("  ⚠️  Set your key: export GEMINI_API_KEY='your-key'\n")
 
     show_history()
 
-    print("Loading on-device model...")
-    model = load_on_device_model()
-    print("✓ On-device model ready\n" if model else "✓ Cloud-only mode (Gemini)\n")
+    print("  Loading model...")
+    model = load_model()
+    print("  ✓ Ready\n")
 
-    # Voice-only mode?
-    print("Input mode:")
-    print("  [1] Standard  (keyboard + voice)")
-    print("  [2] Voice-only (fully hands-free)\n")
-    voice_mode = input("  Enter 1 or 2: ").strip() == "2"
-    if voice_mode:
-        print("\n  ✓ Voice-only mode active. Say 'start' to begin, 'quit' to exit.\n")
-        speak("Voice only mode active. Say start to begin a session.")
-    else:
-        print()
+    print("  Input mode:")
+    print("  [1] Standard   — keyboard + voice")
+    print("  [2] Hands-free — voice only (earpiece)\n")
+    voice_only = input("  Choose (1 or 2): ").strip() == "2"
+    print()
 
-    mode = select_mode()
-    speak(mode["welcome"])
+    speak("Hands free mode. Say start whenever you're ready." if voice_only else "Ready. Press Enter whenever you need me.")
 
     while True:
-        print("─" * 52)
-        if voice_mode:
-            print("Listening for 'start', 'mode', or 'quit'...")
-            audio_path = record_voice(seconds=5)
-            cmd = transcribe_audio(audio_path).lower()
-            print(f"  🗣  Heard: \"{cmd}\"")
+        print("─" * 56)
+        if voice_only:
+            print("  Say 'start' to begin or 'quit' to exit...")
+            cmd = listen(seconds=5, label="Waiting")
         else:
-            print("Press Enter to start (m = change mode, q = quit): ", end="", flush=True)
+            print("  Press Enter to start (q to quit): ", end="", flush=True)
             cmd = input().strip().lower()
 
         if "quit" in cmd or cmd == "q":
             break
-        if "mode" in cmd or cmd == "m":
-            mode = select_mode()
-            speak(mode["welcome"])
-            continue
-        if voice_mode and "start" not in cmd and cmd:
-            speak("Say start to begin, mode to switch, or quit to exit.")
+        if voice_only and "start" not in cmd:
+            if cmd:
+                speak("Say start to begin or quit to exit.")
             continue
 
-        run_session(model, mode, voice_mode)
+        run(model, voice_only)
 
     if model:
         try:
@@ -458,8 +360,8 @@ def main():
             cactus_destroy(model)
         except Exception:
             pass
-    speak("Stay safe. Goodbye!")
-    print("\nGoodbye!")
+    speak("Goodbye.")
+    print("\n  Goodbye.\n")
 
 
 if __name__ == "__main__":
