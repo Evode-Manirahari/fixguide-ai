@@ -1121,7 +1121,7 @@
   <div class="app-wrap">
     <div class="section-label" style="text-align:center">Live demo</div>
     <h2 class="section-title">Try it right now.</h2>
-    <p class="section-sub">Point your camera at any problem. Enter your Gemini API key. Get instant guidance.</p>
+    <p class="section-sub">Point your camera at any problem and get instant AI-powered guidance — no setup needed.</p>
     <div class="app-frame reveal">
       <div class="demo-titlebar">
         <div class="tbar-dot r"></div>
@@ -1141,10 +1141,6 @@
           </div>
         </div>
         <div class="app-controls">
-          <div>
-            <div class="key-label">Gemini API Key (stays in your browser only)</div>
-            <input type="password" id="apiKey" class="key-input" placeholder="AIza..." />
-          </div>
           <div class="ctrl-row">
             <button class="ctrl-btn" id="btnCamera" onclick="startCamera()">
               📷 Start Camera
@@ -1256,84 +1252,40 @@
   }
 
   // ── analyze ──
-  async function analyzeScene(extra) {
-    const key = document.getElementById('apiKey').value.trim();
-    if (!key) {
-      setOutput('<span class="out-danger">Enter your Gemini API key above first.</span>');
-      return;
-    }
+  const API = 'http://localhost:5001';
 
+  async function analyzeScene(extra) {
     const btn = document.getElementById('btnAnalyze');
     btn.disabled = true;
     btn.innerHTML = '<div class="spinner"></div> Analyzing...';
     document.getElementById('appStatus').textContent = 'analyzing...';
     setOutput('<span class="out-muted">Thinking...</span>');
 
-    const prompt = extra
-      ? `Context from previous analysis. Follow-up question or feedback: ${extra}`
+    const question = extra
+      ? `Follow-up question or feedback: ${extra}`
       : 'What do you see? Assess the situation and tell me what to do.';
 
-    const systemPrompt = `You are an instant expert — like Neo downloading kung fu in The Matrix.
-The moment you see something through a camera, you know exactly what it is, what state it's in, and precisely what the person needs to do.
-
-Your job:
-- Look at what's in front of the person
-- Understand the situation immediately
-- Give ONE clear verdict: safe to handle alone, or needs a specialist
-- If they can handle it: guide them step by step (numbered 1. 2. 3.)
-- If it needs a specialist: say who, why, and how urgent
-- If there's danger: say so FIRST, immediately
-
-Rules:
-- Speak like an expert whispering in their ear — calm, clear, confident
-- Never overwhelm. One thing at a time.
-- Flag any danger immediately, before anything else
-- Under 120 words — this goes straight to their earpiece`;
-
     try {
-      const body = {
-        system_instruction: { parts: [{ text: systemPrompt }] },
-        contents: [],
-      };
-
+      const body = { question };
       if (stream) {
-        const b64 = captureFrame();
-        body.contents = [{
-          parts: [
-            { inline_data: { mime_type: 'image/jpeg', data: b64 } },
-            { text: prompt },
-          ]
-        }];
-      } else {
-        body.contents = [{ parts: [{ text: prompt }] }];
+        body.image = captureFrame();
       }
 
-      const models = ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-2.5-flash'];
-      let response, text;
+      const res = await fetch(`${API}/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
 
-      for (const model of models) {
-        const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
-          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
-        );
-        const data = await res.json();
-        if (data.error) {
-          if (data.error.code === 429) { continue; }
-          throw new Error(data.error.message);
-        }
-        text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-        if (text) { response = text; break; }
-      }
-
-      if (!response) throw new Error('All models exhausted. Check your API key.');
-
-      lastOutput = response;
-      renderOutput(response);
+      lastOutput = data.text;
+      renderOutput(data.text);
       document.getElementById('btnSpeak').disabled = false;
       document.getElementById('appStatus').textContent = 'analysis complete';
 
     } catch (e) {
-      setOutput(`<span class="out-danger">Error: ${e.message}</span>`);
+      setOutput(`<span class="out-danger">Error: ${e.message}<br><br>Make sure <code>server.py</code> is running: <code>python3 server.py</code></span>`);
       document.getElementById('appStatus').textContent = 'error';
     }
 
