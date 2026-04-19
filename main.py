@@ -97,9 +97,11 @@ def show_history():
 
 def extract_verdict(response: str) -> str:
     upper = response.upper()
-    if any(w in upper for w in ["DANGER", "STOP", "DO NOT", "HAZARD"]):
+    danger = ["DANGER", "HAZARD", "ELECTRIC SHOCK", "GAS LEAK", "STOP IMMEDIATELY", "DO NOT TOUCH", "RISK OF DEATH", "FIRE RISK"]
+    specialist = ["CALL A ", "CALL AN ", "HIRE A ", "NEED A SPECIALIST", "NEED A PROFESSIONAL", "CONTACT A ", "ELECTRICIAN", "LICENSED PLUMBER", "HVAC TECHNICIAN"]
+    if any(w in upper for w in danger):
         return "⚠️  DANGER"
-    if any(w in upper for w in ["SPECIALIST", "PROFESSIONAL", "MECHANIC", "ELECTRICIAN", "CALL"]):
+    if any(w in upper for w in specialist):
         return "📞 CALL SPECIALIST"
     return "✓  HANDLE IT"
 

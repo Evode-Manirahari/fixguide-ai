@@ -540,6 +540,190 @@
     .wave span:nth-child(4) { height: 12px; animation-delay: 0.3s; }
     .wave span:nth-child(5) { height: 18px; animation-delay: 0.4s; }
 
+    /* ── AGENT UI ── */
+    .agent-wrap {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .agent-cam {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9/16;
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    }
+
+    @media (max-width: 600px) {
+      .agent-cam { border-radius: 0; border-left: none; border-right: none; aspect-ratio: 9/17; }
+    }
+
+    #cameraFeed {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    #cameraFeed.active { opacity: 1; }
+
+    .agent-cam .b {
+      position: absolute;
+      width: 24px; height: 24px;
+      border-color: var(--teal);
+      border-style: solid;
+      opacity: 0.5;
+      z-index: 2;
+    }
+
+    .agent-cam .b.tl { top: 14px; left: 14px; border-width: 2px 0 0 2px; }
+    .agent-cam .b.tr { top: 14px; right: 14px; border-width: 2px 2px 0 0; }
+    .agent-cam .b.bl { bottom: 14px; left: 14px; border-width: 0 0 2px 2px; }
+    .agent-cam .b.br { bottom: 14px; right: 14px; border-width: 0 2px 2px 0; }
+
+    .agent-status-pill {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(4,10,15,0.82);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 7px 16px;
+      font-size: 0.78rem;
+      font-family: var(--mono);
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .status-dot.listening { background: var(--teal); animation: pulse 1s infinite; box-shadow: 0 0 8px var(--teal); }
+    .status-dot.thinking  { background: var(--amber); animation: pulse 0.6s infinite; }
+    .status-dot.speaking  { background: #a78bfa; animation: pulse 0.8s infinite; }
+    .status-dot.live      { background: var(--teal); }
+
+    .agent-wave {
+      position: absolute;
+      bottom: 140px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 36px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .agent-wave.show { opacity: 1; }
+
+    .agent-wave span {
+      display: block;
+      width: 4px;
+      border-radius: 3px;
+      background: var(--teal);
+      box-shadow: 0 0 8px var(--teal);
+      animation: wave 1s ease-in-out infinite;
+    }
+
+    .agent-wave span:nth-child(1) { height: 10px; animation-delay: 0s; }
+    .agent-wave span:nth-child(2) { height: 22px; animation-delay: 0.1s; }
+    .agent-wave span:nth-child(3) { height: 30px; animation-delay: 0.2s; }
+    .agent-wave span:nth-child(4) { height: 36px; animation-delay: 0.3s; }
+    .agent-wave span:nth-child(5) { height: 28px; animation-delay: 0.4s; }
+    .agent-wave span:nth-child(6) { height: 18px; animation-delay: 0.5s; }
+    .agent-wave span:nth-child(7) { height: 10px; animation-delay: 0.6s; }
+
+    .verdict-overlay {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .verdict-overlay.show { opacity: 1; }
+    .verdict-overlay.handle { background: rgba(0,212,170,0.2); color: var(--teal); border: 1px solid rgba(0,212,170,0.4); }
+    .verdict-overlay.specialist { background: rgba(245,158,11,0.2); color: var(--amber); border: 1px solid rgba(245,158,11,0.4); }
+    .verdict-overlay.danger { background: rgba(239,68,68,0.25); color: var(--red); border: 1px solid rgba(239,68,68,0.5); }
+
+    .response-card {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 10;
+      background: linear-gradient(to top, rgba(4,10,15,0.97) 60%, transparent);
+      padding: 48px 20px 20px;
+      transform: translateY(100%);
+      transition: transform 0.4s ease;
+    }
+
+    .response-card.show { transform: translateY(0); }
+
+    .response-text {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text);
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    .agent-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 20px 0 0;
+    }
+
+    .agent-btn {
+      padding: 14px 36px;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      min-width: 160px;
+    }
+
+    .start-btn {
+      background: var(--teal);
+      color: #040a0f;
+      box-shadow: 0 8px 30px rgba(0,212,170,0.35);
+    }
+
+    .start-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .stop-btn {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .stop-btn:hover { border-color: var(--red); color: var(--red); }
+
     /* ── INSTALL BANNER ── */
     #installBanner {
       display: none;
@@ -757,56 +941,47 @@
 <!-- LIVE APP -->
 <section id="app">
   <div class="app-inner">
-    <div class="section-label" style="text-align:center">Live demo</div>
+    <div class="section-label" style="text-align:center">Live agent</div>
     <h2 class="section-title">Try it right now.</h2>
-    <p class="section-sub">Point your camera at any problem. Hit Analyze. Get expert guidance instantly.</p>
+    <p class="section-sub">Tap Start. Point your camera. Speak your question. The agent responds instantly and keeps listening.</p>
 
-    <div class="app-frame reveal">
-      <div class="app-titlebar">
-        <div class="tb r"></div><div class="tb y"></div><div class="tb g"></div>
-        <span class="tb-label" id="appStatus">ready · backend at localhost:5001</span>
-      </div>
-      <div class="app-grid">
+    <!-- AGENT UI -->
+    <div class="agent-wrap reveal">
 
-        <!-- camera -->
-        <div class="cam-panel">
-          <video id="cameraFeed" autoplay muted playsinline></video>
-          <div class="cam-placeholder" id="camPlaceholder">
-            <div class="cam-ring">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" stroke-width="1.5">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                <circle cx="12" cy="13" r="4"/>
-              </svg>
-            </div>
-            <p>Camera off</p>
-          </div>
-          <div class="cam-brackets">
-            <div class="b tl"></div><div class="b tr"></div>
-            <div class="b bl"></div><div class="b br"></div>
-          </div>
-          <div class="cam-status-bar" id="camStatus">start camera</div>
+      <!-- camera fullscreen -->
+      <div class="agent-cam">
+        <video id="cameraFeed" autoplay muted playsinline></video>
+
+        <!-- corner brackets -->
+        <div class="b tl"></div><div class="b tr"></div>
+        <div class="b bl"></div><div class="b br"></div>
+
+        <!-- status pill top center -->
+        <div class="agent-status-pill" id="statusPill">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusLabel">Tap Start to begin</span>
         </div>
 
-        <!-- controls -->
-        <div class="ctrl-panel">
-          <div class="ctrl-row">
-            <button class="cbtn" id="btnCamera" onclick="toggleCamera()">📷 Camera</button>
-            <button class="cbtn primary" id="btnAnalyze" onclick="doAnalyze()" disabled>🧠 Analyze</button>
-          </div>
-          <div class="ctrl-row">
-            <button class="cbtn" id="btnVoice" onclick="toggleVoice()" disabled>🎤 Voice</button>
-            <button class="cbtn" id="btnSpeak" onclick="speakOut()" disabled>🔊 Read</button>
-          </div>
-          <div class="listen-row" id="listenRow">
-            <div class="wave"><span></span><span></span><span></span><span></span><span></span></div>
-            <span>Listening...</span>
-          </div>
-          <div class="output-box" id="output">
-            <span class="out-muted">Your analysis will appear here...</span>
-          </div>
+        <!-- wave visualizer bottom center -->
+        <div class="agent-wave" id="agentWave">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
         </div>
 
+        <!-- verdict overlay -->
+        <div class="verdict-overlay" id="verdictOverlay"></div>
+
+        <!-- response card bottom -->
+        <div class="response-card" id="responseCard">
+          <div class="response-text" id="responseText"></div>
+        </div>
       </div>
+
+      <!-- controls row -->
+      <div class="agent-controls">
+        <button class="agent-btn stop-btn" id="btnStop" onclick="stopAgent()" style="display:none">⏹ Stop</button>
+        <button class="agent-btn start-btn" id="btnStart" onclick="startAgent()">▶ Start Agent</button>
+      </div>
+
     </div>
   </div>
 </section>
@@ -855,13 +1030,11 @@
     deferredPrompt = e;
     document.getElementById('installBanner').classList.add('show');
   });
-
   function doInstall() {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then(() => { deferredPrompt = null; dismissInstall(); });
   }
-
   function dismissInstall() {
     document.getElementById('installBanner').classList.remove('show');
   }
@@ -873,52 +1046,45 @@
   );
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-  // ── state ──
-  const API = 'http://localhost:5001';
+  // ── agent state ──
+  const API = 'https://winner-vic-vhs-duration.trycloudflare.com';
   let camStream = null;
+  let agentRunning = false;
   let voiceRec = null;
-  let lastText = '';
 
-  // ── camera ──
-  async function toggleCamera() {
-    const btn = document.getElementById('btnCamera');
-    const feed = document.getElementById('cameraFeed');
-    const placeholder = document.getElementById('camPlaceholder');
-    const status = document.getElementById('camStatus');
+  // ── UI helpers ──
+  function setStatus(label, dotClass) {
+    document.getElementById('statusLabel').textContent = label;
+    const dot = document.getElementById('statusDot');
+    dot.className = 'status-dot' + (dotClass ? ' ' + dotClass : '');
+  }
 
-    if (camStream) {
-      camStream.getTracks().forEach(t => t.stop());
-      camStream = null;
-      feed.srcObject = null;
-      feed.classList.remove('active');
-      placeholder.style.display = 'flex';
-      btn.textContent = '📷 Camera';
-      status.textContent = 'start camera';
-      status.className = 'cam-status-bar';
-      document.getElementById('btnAnalyze').disabled = true;
-      document.getElementById('btnVoice').disabled = true;
-      return;
+  function showWave(on) {
+    document.getElementById('agentWave').classList.toggle('show', on);
+  }
+
+  function showVerdict(text) {
+    const u = text.toUpperCase();
+    const el = document.getElementById('verdictOverlay');
+    const dangerPhrases = ['DANGER', 'HAZARD', 'ELECTRIC SHOCK', 'GAS LEAK', 'STOP IMMEDIATELY', 'DO NOT TOUCH', 'RISK OF DEATH', 'FIRE RISK'];
+    const specialistPhrases = ['CALL A ', 'CALL AN ', 'HIRE A ', 'NEED A SPECIALIST', 'NEED A PROFESSIONAL', 'CONTACT A ', 'ELECTRICIAN', 'LICENSED PLUMBER', 'HVAC TECHNICIAN'];
+    if (dangerPhrases.some(p => u.includes(p))) {
+      el.textContent = '⚠️ DANGER'; el.className = 'verdict-overlay show danger';
+    } else if (specialistPhrases.some(p => u.includes(p))) {
+      el.textContent = '📞 CALL SPECIALIST'; el.className = 'verdict-overlay show specialist';
+    } else {
+      el.textContent = '✓ HANDLE IT'; el.className = 'verdict-overlay show handle';
     }
+  }
 
-    btn.innerHTML = '<div class="spinner"></div>';
-    try {
-      camStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false,
-      });
-      feed.srcObject = camStream;
-      feed.classList.add('active');
-      placeholder.style.display = 'none';
-      btn.textContent = '⏹ Stop';
-      status.textContent = '● live';
-      status.className = 'cam-status-bar live';
-      document.getElementById('btnAnalyze').disabled = false;
-      document.getElementById('btnVoice').disabled = false;
-    } catch (err) {
-      btn.textContent = '📷 Camera';
-      status.textContent = 'permission denied';
-      setOutput('<span class="out-danger">Camera access denied. Allow camera in browser settings.</span>');
-    }
+  function showResponse(text) {
+    document.getElementById('responseText').textContent = text;
+    document.getElementById('responseCard').classList.add('show');
+  }
+
+  function hideResponse() {
+    document.getElementById('responseCard').classList.remove('show');
+    document.getElementById('verdictOverlay').className = 'verdict-overlay';
   }
 
   function captureFrame() {
@@ -930,116 +1096,168 @@
     return c.toDataURL('image/jpeg', 0.85).split(',')[1];
   }
 
-  // ── analyze ──
-  async function doAnalyze(voiceQuestion) {
-    const btn = document.getElementById('btnAnalyze');
-    const statusEl = document.getElementById('appStatus');
-    const camStatus = document.getElementById('camStatus');
+  // ── speak and resolve when done ──
+  function speakAndWait(text) {
+    return new Promise(resolve => {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 1.05;
+      u.onend = resolve;
+      u.onerror = resolve;
+      window.speechSynthesis.speak(u);
+      // fallback timeout in case onend doesn't fire
+      setTimeout(resolve, text.length * 65);
+    });
+  }
 
-    btn.disabled = true;
-    btn.innerHTML = '<div class="spinner"></div>';
-    statusEl.textContent = 'analyzing...';
-    camStatus.textContent = '⏳ thinking';
-    camStatus.className = 'cam-status-bar thinking';
-    setOutput('<span class="out-muted">Thinking...</span>');
+  // ── listen once and resolve with transcript ──
+  function listenOnce() {
+    return new Promise((resolve) => {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) { resolve(''); return; }
 
-    const body = {
-      question: voiceQuestion || 'What do you see? Assess the situation and tell me what to do.',
-    };
+      const rec = new SR();
+      voiceRec = rec;
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.lang = 'en-US';
+
+      let resolved = false;
+      const done = (val) => {
+        if (resolved) return;
+        resolved = true;
+        voiceRec = null;
+        resolve(val);
+      };
+
+      rec.onresult = e => done(e.results[0][0].transcript.trim());
+      rec.onerror  = () => done('');
+      rec.onend    = () => done('');
+
+      rec.start();
+    });
+  }
+
+  // ── analyze via backend ──
+  async function analyze(question) {
+    const body = { question };
     if (camStream) body.image = captureFrame();
+    const res = await fetch(`${API}/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    return data.text;
+  }
 
-    try {
-      const res = await fetch(`${API}/analyze`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
+  async function followup(question, context) {
+    const res = await fetch(`${API}/followup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, context }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    return data.text;
+  }
 
-      lastText = data.text;
-      renderOutput(data.text);
-      document.getElementById('btnSpeak').disabled = false;
-      statusEl.textContent = 'analysis complete';
-      camStatus.textContent = '● live';
-      camStatus.className = 'cam-status-bar live';
+  // ── main agent loop ──
+  async function agentLoop() {
+    let context = '';
 
-      // auto-speak on mobile
-      if (window.matchMedia('(max-width: 768px)').matches) {
-        speakOut();
+    while (agentRunning) {
+      // 1. listen
+      setStatus('Listening...', 'listening');
+      showWave(true);
+      hideResponse();
+
+      const heard = await listenOnce();
+      showWave(false);
+
+      if (!agentRunning) break;
+      if (!heard) {
+        setStatus('Didn\'t catch that — try again', 'live');
+        continue;
       }
-    } catch (err) {
-      setOutput(`<span class="out-danger">Error: ${err.message}<br><small>Is server.py running? Check laptop terminal.</small></span>`);
-      statusEl.textContent = 'error';
-      camStatus.textContent = '● live';
-      camStatus.className = 'cam-status-bar live';
+
+      // 2. analyze
+      setStatus('Thinking...', 'thinking');
+      try {
+        let reply;
+        if (context) {
+          reply = await followup(heard, context);
+        } else {
+          reply = await analyze(heard);
+        }
+        context = reply;
+
+        // 3. show + speak
+        showVerdict(reply);
+        showResponse(reply);
+        setStatus('Speaking...', 'speaking');
+        await speakAndWait(reply);
+
+        if (!agentRunning) break;
+        setStatus('Listening...', 'listening');
+
+      } catch (err) {
+        const msg = 'Connection error. Make sure the server is running.';
+        showResponse(msg);
+        setStatus('Error — retrying...', '');
+        await speakAndWait(msg);
+        await new Promise(r => setTimeout(r, 2000));
+      }
     }
-
-    btn.textContent = '🧠 Analyze';
-    btn.disabled = false;
   }
 
-  function renderOutput(text) {
-    const u = text.toUpperCase();
-    let verdict = '';
-    if (u.includes('DANGER') || u.includes('STOP') || u.includes('DO NOT') || u.includes('HAZARD')) {
-      verdict = '<div class="out-verdict out-danger">⚠️ DANGER</div>';
-    } else if (u.includes('SPECIALIST') || u.includes('PROFESSIONAL') || u.includes('ELECTRICIAN') || u.includes('CALL')) {
-      verdict = '<div class="out-verdict out-specialist">📞 CALL SPECIALIST</div>';
-    } else {
-      verdict = '<div class="out-verdict out-handle">✓ HANDLE IT</div>';
-    }
-    document.getElementById('output').innerHTML = verdict + '<div class="out-body">' + text.replace(/\n/g, '<br>') + '</div>';
-  }
-
-  function setOutput(html) {
-    document.getElementById('output').innerHTML = html;
-  }
-
-  // ── voice ──
-  function toggleVoice() {
+  // ── start / stop ──
+  async function startAgent() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { alert('Voice not supported. Use Chrome on Android.'); return; }
-
-    const btn = document.getElementById('btnVoice');
-    const row = document.getElementById('listenRow');
-
-    if (voiceRec) {
-      voiceRec.stop();
-      voiceRec = null;
-      btn.textContent = '🎤 Voice';
-      row.classList.remove('show');
+    if (!SR) {
+      alert('Voice input requires Chrome on Android. Open this page in Chrome.');
       return;
     }
 
-    voiceRec = new SR();
-    voiceRec.continuous = false;
-    voiceRec.interimResults = false;
-    voiceRec.lang = 'en-US';
+    document.getElementById('btnStart').style.display = 'none';
+    document.getElementById('btnStop').style.display = 'inline-block';
+    agentRunning = true;
 
-    voiceRec.onstart = () => { btn.textContent = '⏹ Stop'; row.classList.add('show'); };
+    // start camera
+    try {
+      camStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } },
+        audio: false,
+      });
+      const feed = document.getElementById('cameraFeed');
+      feed.srcObject = camStream;
+      feed.classList.add('active');
+    } catch (e) {
+      // camera denied — run without it
+    }
 
-    voiceRec.onresult = e => {
-      const transcript = e.results[0][0].transcript;
-      doAnalyze(transcript);
-    };
-
-    voiceRec.onend = () => {
-      btn.textContent = '🎤 Voice';
-      row.classList.remove('show');
-      voiceRec = null;
-    };
-
-    voiceRec.start();
+    setStatus('Agent active — speak anytime', 'live');
+    await speakAndWait('Ready. Point your camera and tell me what you see.');
+    agentLoop();
   }
 
-  // ── speak ──
-  function speakOut() {
-    if (!lastText) return;
+  function stopAgent() {
+    agentRunning = false;
+    if (voiceRec) { try { voiceRec.stop(); } catch(e){} voiceRec = null; }
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(lastText);
-    u.rate = 1.05;
-    window.speechSynthesis.speak(u);
+    if (camStream) {
+      camStream.getTracks().forEach(t => t.stop());
+      camStream = null;
+      const feed = document.getElementById('cameraFeed');
+      feed.srcObject = null;
+      feed.classList.remove('active');
+    }
+    hideResponse();
+    showWave(false);
+    setStatus('Tap Start to begin', '');
+    document.getElementById('btnStop').style.display = 'none';
+    document.getElementById('btnStart').style.display = 'inline-block';
   }
 </script>
 </body>
