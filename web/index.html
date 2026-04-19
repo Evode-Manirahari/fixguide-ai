@@ -676,6 +676,10 @@
         <button class="agent-btn stop-btn" id="btnStop" onclick="stopAgent()">⏹ Stop</button>
         <button class="agent-btn start-btn" id="btnStart" onclick="startAgent()">▶ Start Agent</button>
       </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px">
+        <span style="font-size:0.75rem;color:var(--muted);font-family:var(--mono)">🔊 Voice:</span>
+        <select id="voiceSelect" onchange="selectedVoice = speechSynthesis.getVoices().find(v=>v.name===this.value)" style="background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:6px 10px;font-size:0.78rem;outline:none;cursor:pointer;max-width:220px"></select>
+      </div>
     </div>
   </div>
 </section>
@@ -776,11 +780,53 @@
     return c.toDataURL('image/jpeg', 0.85).split(',')[1];
   }
 
+  let selectedVoice = null;
+
+  function loadVoices() {
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices.length) return;
+
+    // preference order — best sounding on Android/Chrome
+    const preferred = [
+      'Google UK English Female',
+      'Google UK English Male',
+      'Google US English',
+      'en-US-Neural2-F',
+      'Microsoft Zira',
+    ];
+
+    for (const name of preferred) {
+      const match = voices.find(v => v.name === name);
+      if (match) { selectedVoice = match; break; }
+    }
+
+    // fallback: any English voice
+    if (!selectedVoice) {
+      selectedVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+    }
+
+    // populate selector
+    const sel = document.getElementById('voiceSelect');
+    if (!sel) return;
+    sel.innerHTML = '';
+    voices.filter(v => v.lang.startsWith('en')).forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v.name;
+      opt.textContent = v.name.replace('Google ', '').replace('Microsoft ', '');
+      if (v === selectedVoice) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+
   function speakAndWait(text) {
     return new Promise(resolve => {
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.rate = 1.05;
+      if (selectedVoice) u.voice = selectedVoice;
       u.onend = resolve; u.onerror = resolve;
       window.speechSynthesis.speak(u);
       setTimeout(resolve, text.length * 70 + 1000);
