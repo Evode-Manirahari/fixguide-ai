@@ -1,0 +1,39 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# React Native build
+FixGuideApp/android/build/
+FixGuideApp/android/.gradle/
+FixGuideApp/android/app/build/
+FixGuideApp/android/local.properties
+FixGuideApp2/android/build/
+FixGuideApp2/android/.gradle/
+FixGuideApp2/android/app/build/
+FixGuideApp2/android/local.properties
+FixGuideApp2/android/app/src/main/assets/index.android.bundle
+FixGuideApp2/android/app/src/main/res/drawable-*/
+FixGuideApp2/android/app/src/main/res/raw/
+*.keystore
+!debug.keystore
+
+# iOS
+FixGuideApp/ios/Pods/
+FixGuideApp2/ios/Pods/
+
+# Metro cache
+.metro-health-check*
+.bundle
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+
+# macOS
+.DS_Store
+
+# Cactus C++ build artifacts
+voice-agents-hack/cactus/cactus/build/
