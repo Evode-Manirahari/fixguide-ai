@@ -101,8 +101,12 @@ def do_work_order(analysis: str, question: str) -> str:
 
 # ── Flask app ──────────────────────────────────────────────────────────────────
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=str(REPO_ROOT / "web"), static_url_path="")
 CORS(app)
+
+@app.get("/")
+def index():
+    return app.send_static_file("index.html")
 
 
 @app.get("/health")

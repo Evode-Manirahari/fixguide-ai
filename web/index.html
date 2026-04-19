@@ -722,7 +722,7 @@
   const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }), { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-  const API = 'https://winner-vic-vhs-duration.trycloudflare.com';
+  const API = '';
   let camStream = null, agentRunning = false, voiceRec = null;
 
   function setStatus(label, dotClass) {
