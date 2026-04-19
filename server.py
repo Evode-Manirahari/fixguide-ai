@@ -20,30 +20,21 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODELS = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-2.5-flash"]
 
 SYSTEM_PROMPT = """
-You are an instant expert — like Neo downloading kung fu in The Matrix.
-The moment you see something through a camera, you know exactly what it is,
-what state it's in, and precisely what the person in front of it needs to do.
+You are FixGuide — a calm, knowledgeable friend who happens to be an expert in home repair, plumbing, electrical work, HVAC, cars, and anything physical.
 
-Your job:
-- Look at what's in front of the person
-- Understand the situation immediately
-- Give ONE clear verdict: safe to handle alone, or needs a specialist
-- If they can handle it: guide them one step at a time, spoken clearly (number your steps 1. 2. 3.)
-- If it needs a specialist: say who, why, and how urgent
-- If there's danger: say so FIRST, immediately
+You're having a live conversation with someone who needs help. You can see what they're pointing their camera at.
 
-Rules:
-- Speak like an expert whispering in their ear — calm, clear, confident
-- Never overwhelm. One thing at a time.
-- Flag any danger immediately, before anything else
-- Under 120 words per response — this goes straight to their earpiece
-"""
+How to speak:
+- Like a real person, not a report. Warm, clear, confident.
+- Short sentences. Natural rhythm. Never robotic or formal.
+- Guide them conversationally — "Turn that valve clockwise, the one right under the pipe" not "Step 1: Turn valve."
+- One thing at a time. Never overwhelm.
+- After guiding, check in naturally — "Give that a try and tell me what happens" or "Does that make sense?"
+- If something is dangerous, say so immediately and firmly — but calm, not panicked.
+- If they need a professional, say who and why, and offer to write a work order.
 
-STEP_PROMPT = """
-You are guiding someone through a physical task step by step.
-They just attempted a step and gave feedback.
-Give ONE short follow-up: next step if it worked, or a fix if it didn't.
-Under 40 words. Spoken aloud directly into their ear.
+Keep responses under 80 words — this goes straight to their earpiece.
+Never use numbered lists or bullet points. Just talk.
 """
 
 WORK_ORDER_PROMPT = """
@@ -71,25 +62,41 @@ def _generate(contents, system: str) -> str:
     return "I'm having trouble connecting. Please check your API key and try again."
 
 
-def analyze_image(image_b64: str | None, question: str) -> str:
+def chat(history: list, image_b64: str | None = None) -> str:
+    """Send full conversation history to Gemini for natural multi-turn dialogue."""
     from google.genai import types
-    if image_b64:
-        img_bytes = base64.b64decode(image_b64)
-        return _generate(
-            contents=[
+    from google import genai
+
+    client = genai.Client(api_key=GEMINI_API_KEY)
+    contents = []
+
+    for i, msg in enumerate(history):
+        role = "user" if msg["role"] == "user" else "model"
+        # attach image to the first user message if provided
+        if role == "user" and i == 0 and image_b64:
+            img_bytes = base64.b64decode(image_b64)
+            contents.append(types.Content(role="user", parts=[
                 types.Part.from_bytes(data=img_bytes, mime_type="image/jpeg"),
-                types.Part.from_text(text=question or "What do you see? What should I do?"),
-            ],
-            system=SYSTEM_PROMPT,
-        )
-    return _generate(contents=[question], system=SYSTEM_PROMPT)
+                types.Part.from_text(text=msg["content"]),
+            ]))
+        else:
+            contents.append(types.Content(role=role, parts=[
+                types.Part.from_text(text=msg["content"]),
+            ]))
 
-
-def do_followup(question: str, context: str) -> str:
-    return _generate(
-        contents=[f"Context: {context}\n\nFeedback: {question}"],
-        system=STEP_PROMPT,
-    )
+    for model in GEMINI_MODELS:
+        try:
+            r = client.models.generate_content(
+                model=model,
+                config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
+                contents=contents,
+            )
+            return r.text.strip()
+        except Exception as e:
+            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                continue
+            raise
+    return "I'm having trouble connecting right now. Please try again."
 
 
 def do_work_order(analysis: str, question: str) -> str:
@@ -114,25 +121,13 @@ def health():
     return jsonify({"status": "ok", "key_set": bool(GEMINI_API_KEY)})
 
 
-@app.post("/analyze")
-def route_analyze():
+@app.post("/chat")
+def route_chat():
     data = request.get_json()
-    image_b64 = data.get("image")        # base64 JPEG, optional
-    question = data.get("question", "What do you see? What should I do?")
+    history = data.get("history", [])   # [{role, content}, ...]
+    image_b64 = data.get("image")       # base64 JPEG, attached to first message
     try:
-        result = analyze_image(image_b64, question)
-        return jsonify({"text": result})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.post("/followup")
-def route_followup():
-    data = request.get_json()
-    question = data.get("question", "")
-    context = data.get("context", "")
-    try:
-        result = do_followup(question, context)
+        result = chat(history, image_b64)
         return jsonify({"text": result})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

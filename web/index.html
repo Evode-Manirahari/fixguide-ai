@@ -728,6 +728,8 @@
 
   const API = '';
   let camStream = null, agentRunning = false, voiceRec = null;
+  let conversationHistory = [];
+  let firstImage = null;
 
   function setStatus(label, dotClass) {
     document.getElementById('slabel').textContent = label;
@@ -848,36 +850,41 @@
     });
   }
 
-  async function callAPI(endpoint, body) {
-    const res = await fetch(`${API}/${endpoint}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  async function callChat(userMessage) {
+    conversationHistory.push({ role: 'user', content: userMessage });
+    const body = { history: conversationHistory };
+    if (firstImage && conversationHistory.length === 1) body.image = firstImage;
+
+    const res = await fetch(`${API}/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
+    conversationHistory.push({ role: 'assistant', content: data.text });
     return data.text;
   }
 
   async function agentLoop() {
-    let context = '';
     while (agentRunning) {
       setStatus('Listening...', 'listen');
       showWave(true);
-      hideResponse();
 
       const heard = await listenOnce();
       showWave(false);
       if (!agentRunning) break;
-
       if (!heard) { setStatus('Didn\'t catch that — try again', 'live'); continue; }
 
+      // capture image on first message
+      if (conversationHistory.length === 0 && camStream) {
+        firstImage = captureFrame();
+      }
+
       setStatus('Thinking...', 'think');
+      hideResponse();
       try {
-        const body = { question: heard };
-        if (camStream) body.image = captureFrame();
-
-        const reply = context
-          ? await callAPI('followup', { question: heard, context })
-          : await callAPI('analyze', body);
-
-        context = reply;
+        const reply = await callChat(heard);
         showVerdict(reply);
         showResponse(reply);
         setStatus('Speaking...', 'speak');
@@ -910,12 +917,14 @@
     } catch(e) {}
 
     setStatus('Agent active', 'live');
-    await speakAndWait('Ready. Point your camera and tell me what you see.');
+    await speakAndWait("Hey, I'm here. Point your camera at the problem and tell me what's going on.");
     agentLoop();
   }
 
   function stopAgent() {
     agentRunning = false;
+    conversationHistory = [];
+    firstImage = null;
     if (voiceRec) { try { voiceRec.stop(); } catch(e){} voiceRec=null; }
     window.speechSynthesis.cancel();
     if (camStream) { camStream.getTracks().forEach(t=>t.stop()); camStream=null; const f=document.getElementById('cameraFeed'); f.srcObject=null; f.classList.remove('active'); }
