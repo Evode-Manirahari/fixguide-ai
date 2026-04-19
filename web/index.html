@@ -8,6 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="FixGuide" />
+  <meta name="description" content="Point your camera at any home problem. Get instant expert guidance in your ear. No service call needed." />
   <title>FixGuide AI — Your Expert. In Your Ear.</title>
   <link rel="manifest" href="/manifest.json" />
   <style>
@@ -31,804 +32,376 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; overflow-x: hidden; }
 
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 0;
+      position: fixed; inset: 0;
+      background-image: linear-gradient(rgba(0,212,170,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,170,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none; z-index: 0;
     }
 
     /* ── NAV ── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: calc(var(--safe-top) + 8px) 1.25rem 8px;
-      background: rgba(4,10,15,0.9);
-      backdrop-filter: blur(20px);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: calc(var(--safe-top) + 10px) 1.5rem 10px;
+      background: rgba(4,10,15,0.88); backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
     }
 
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 700;
-      font-size: 1rem;
-    }
-
-    .nav-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--teal);
-      box-shadow: 0 0 10px var(--teal);
-      animation: pulse 2s infinite;
-    }
+    .logo { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; text-decoration: none; color: var(--text); }
+    .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 12px var(--teal); animation: pulse 2s infinite; }
 
     .nav-right { display: flex; gap: 0.75rem; align-items: center; }
-
-    .nav-btn {
-      background: var(--teal);
-      color: #040a0f;
-      border: none;
-      padding: 0.45rem 1rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .nav-ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 0.45rem 1rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-    }
+    .nav-link { color: var(--muted); font-size: 0.875rem; text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: var(--text); }
+    .nav-cta { background: var(--teal); color: #040a0f; border: none; padding: 0.5rem 1.1rem; border-radius: 7px; font-size: 0.875rem; font-weight: 700; cursor: pointer; text-decoration: none; }
 
     /* ── HERO ── */
     .hero {
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 100px 1.5rem 5rem;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 110px 1.5rem 5rem;
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(0,212,170,0.08);
-      border: 1px solid rgba(0,212,170,0.2);
-      border-radius: 100px;
-      padding: 0.3rem 0.9rem;
-      font-size: 0.72rem;
-      color: var(--teal);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-family: var(--mono);
-      margin-bottom: 1.75rem;
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,212,170,0.07); border: 1px solid rgba(0,212,170,0.2);
+      border-radius: 100px; padding: 0.35rem 1rem;
+      font-size: 0.75rem; color: var(--teal); letter-spacing: 0.06em; text-transform: uppercase;
+      font-family: var(--mono); margin-bottom: 2rem;
     }
 
-    .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); animation: pulse 1.5s infinite; }
+    .eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); animation: pulse 1.5s infinite; }
 
     .hero h1 {
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.05;
-      margin-bottom: 1.25rem;
+      font-size: clamp(2.8rem, 9vw, 6rem);
+      font-weight: 900; letter-spacing: -0.05em; line-height: 1;
+      margin-bottom: 1.5rem; max-width: 820px;
     }
 
-    .accent {
-      background: linear-gradient(135deg, var(--teal), #00a884);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+    .grad { background: linear-gradient(135deg, var(--teal) 0%, #00e8bb 50%, #00a884 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-    .hero-sub {
-      font-size: clamp(1rem, 3vw, 1.2rem);
-      color: var(--muted);
-      max-width: 500px;
-      line-height: 1.7;
-      margin-bottom: 0.6rem;
-    }
+    .hero-sub { font-size: clamp(1.05rem, 2.5vw, 1.25rem); color: var(--muted); max-width: 520px; line-height: 1.7; margin-bottom: 0.6rem; }
+    .hero-quote { font-size: 0.9rem; color: var(--teal-dim); font-style: italic; margin-bottom: 2.75rem; }
 
-    .hero-quote {
-      font-size: 0.9rem;
-      color: var(--teal-dim);
-      font-style: italic;
-      margin-bottom: 2.5rem;
-    }
-
-    .hero-btns {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    .hero-btns { display: flex; gap: 0.875rem; flex-wrap: wrap; justify-content: center; }
 
     .btn-primary {
-      background: var(--teal);
-      color: #040a0f;
-      border: none;
-      padding: 0.9rem 2rem;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: opacity 0.2s;
+      background: var(--teal); color: #040a0f; border: none; padding: 1rem 2.2rem;
+      border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 8px 32px rgba(0,212,170,0.3); transition: all 0.2s;
     }
-
-    .btn-primary:hover { opacity: 0.85; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,212,170,0.4); }
 
     .btn-secondary {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 0.9rem 2rem;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      transition: border-color 0.2s, color 0.2s;
+      background: transparent; color: var(--text); border: 1px solid var(--border);
+      padding: 1rem 2.2rem; border-radius: 10px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
     }
-
     .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
 
-    /* ── HOW IT WORKS ── */
-    .section {
-      position: relative;
-      z-index: 1;
-      padding: 5rem 1.5rem;
-      max-width: 1100px;
-      margin: 0 auto;
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; justify-content: center;
+      gap: 2.5rem; flex-wrap: wrap;
+      background: rgba(10,21,32,0.5);
     }
 
-    .section-label {
-      text-align: center;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--teal);
-      font-family: var(--mono);
-      margin-bottom: 0.75rem;
+    .trust-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--mono); }
+
+    .trust-items { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+
+    .trust-item { display: flex; align-items: center; gap: 7px; font-size: 0.85rem; color: var(--text); font-weight: 600; }
+    .trust-item svg { opacity: 0.7; }
+
+    /* ── STAT ROW ── */
+    .stat-row {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      max-width: 800px; margin: 0 auto;
+      padding: 4rem 1.5rem;
+      gap: 1px; background: var(--border);
     }
 
-    .section-title {
-      text-align: center;
-      font-size: clamp(1.75rem, 4vw, 2.75rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 0.75rem;
+    .stat-card {
+      background: var(--bg);
+      padding: 2rem 1.5rem; text-align: center;
     }
 
-    .section-sub {
-      text-align: center;
-      color: var(--muted);
-      max-width: 480px;
-      margin: 0 auto 3rem;
-      line-height: 1.7;
-      font-size: 0.95rem;
+    .stat-num { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; letter-spacing: -0.04em; color: var(--teal); line-height: 1; margin-bottom: 6px; }
+    .stat-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── SECTION SHARED ── */
+    .section { position: relative; z-index: 1; padding: 5.5rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+
+    .section-label { text-align: center; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); font-family: var(--mono); margin-bottom: 0.75rem; }
+    .section-title { text-align: center; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    .section-sub { text-align: center; color: var(--muted); max-width: 480px; margin: 0 auto 3.5rem; line-height: 1.7; font-size: 0.95rem; }
+
+    /* ── USE CASES ── */
+    .cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+
+    .case-card {
+      background: var(--bg); padding: 28px 24px;
+      display: flex; flex-direction: column; gap: 10px;
+      transition: background 0.2s;
     }
 
-    .how-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      position: relative;
-    }
+    .case-card:hover { background: var(--surface); }
+
+    .case-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .case-icon { font-size: 1.75rem; flex-shrink: 0; }
+    .case-cost { font-size: 0.72rem; font-family: var(--mono); color: var(--red); background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+    .case-title { font-size: 0.95rem; font-weight: 700; }
+    .case-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+    .case-verdict { font-size: 0.75rem; font-weight: 700; color: var(--teal); margin-top: auto; padding-top: 8px; border-top: 1px solid var(--border); }
+
+    /* ── HOW ── */
+    .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; position: relative; }
 
     .how-grid::before {
-      content: '';
-      position: absolute;
-      top: 27px;
-      left: calc(16.67% + 16px);
-      right: calc(16.67% + 16px);
-      height: 1px;
-      background: linear-gradient(90deg, var(--border), var(--teal-dim), var(--border));
+      content: ''; position: absolute; top: 27px;
+      left: calc(16.67% + 18px); right: calc(16.67% + 18px);
+      height: 1px; background: linear-gradient(90deg, transparent, var(--teal-dim), transparent);
     }
 
-    .how-step { display: flex; flex-direction: column; align-items: center; text-align: center; }
-
-    .how-icon {
-      width: 54px; height: 54px;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      position: relative; z-index: 1;
-    }
-
+    .how-step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 20px; }
+    .how-icon { width: 54px; height: 54px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; position: relative; z-index: 1; }
     .how-step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
     .how-step p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
 
     /* ── VERDICTS ── */
-    .verdicts-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-    }
-
-    .vcard {
-      border-radius: 12px;
-      padding: 24px 20px;
-      text-align: center;
-    }
-
-    .vcard.handle { background: rgba(0,212,170,0.05); border: 1px solid rgba(0,212,170,0.2); }
-    .vcard.specialist { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); }
-    .vcard.danger { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); }
-
-    .vcard .vi { font-size: 2rem; margin-bottom: 10px; }
-    .vcard h3 { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
+    .verdicts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .vcard { border-radius: 14px; padding: 28px 22px; text-align: center; }
+    .vcard.handle { background: rgba(0,212,170,0.05); border: 1px solid rgba(0,212,170,0.18); }
+    .vcard.specialist { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.18); }
+    .vcard.danger { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.18); }
+    .vcard .vi { font-size: 2.2rem; margin-bottom: 12px; }
+    .vcard h3 { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
     .vcard.handle h3 { color: var(--teal); }
     .vcard.specialist h3 { color: var(--amber); }
     .vcard.danger h3 { color: var(--red); }
-    .vcard p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+    .vcard p { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
 
-    /* ── FEATURES ── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
+    /* ── PRICING ── */
+    .pricing-wrap { position: relative; z-index: 1; padding: 5.5rem 1.5rem; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .pricing-inner { max-width: 900px; margin: 0 auto; }
+
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+    .price-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px 28px;
+      display: flex; flex-direction: column; gap: 20px;
+      transition: border-color 0.2s;
     }
 
-    .fcard {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      transition: border-color 0.2s, transform 0.2s;
+    .price-card.featured { border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal), 0 20px 60px rgba(0,212,170,0.1); }
+
+    .price-tag { font-size: 0.72rem; font-family: var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .price-tag.featured-tag { color: var(--teal); }
+
+    .price-name { font-size: 1.2rem; font-weight: 800; }
+
+    .price-amount { display: flex; align-items: flex-end; gap: 4px; }
+    .price-num { font-size: 3rem; font-weight: 900; letter-spacing: -0.04em; line-height: 1; }
+    .price-period { font-size: 0.9rem; color: var(--muted); margin-bottom: 6px; }
+    .price-card.featured .price-num { color: var(--teal); }
+
+    .price-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    .price-features { display: flex; flex-direction: column; gap: 10px; }
+    .price-feature { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
+    .price-feature .check { color: var(--teal); font-weight: 700; flex-shrink: 0; }
+    .price-feature .cross { color: var(--muted); flex-shrink: 0; }
+
+    .price-cta {
+      display: block; text-align: center; text-decoration: none;
+      padding: 13px; border-radius: 9px; font-size: 0.95rem; font-weight: 700;
+      margin-top: auto; transition: all 0.2s;
     }
 
-    .fcard:hover { border-color: rgba(0,212,170,0.3); transform: translateY(-2px); }
-    .fcard .fi { font-size: 1.5rem; margin-bottom: 12px; }
-    .fcard h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
-    .fcard p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+    .price-cta.outline { border: 1px solid var(--border); color: var(--text); background: transparent; }
+    .price-cta.outline:hover { border-color: var(--teal); color: var(--teal); }
+    .price-cta.solid { background: var(--teal); color: #040a0f; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(0,212,170,0.3); }
+    .price-cta.solid:hover { opacity: 0.88; transform: translateY(-1px); }
 
-    /* ── TECH ── */
-    .tech-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      justify-content: center;
-    }
+    /* ── AGENT ── */
+    .agent-section { position: relative; z-index: 1; padding: 5.5rem 1.5rem; }
+    .agent-inner { max-width: 480px; margin: 0 auto; }
 
-    .tech-pill {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 8px 16px;
-      font-size: 0.82rem;
-      font-family: var(--mono);
-    }
-
-    .tech-pill .td { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); }
-
-    /* ── APP SECTION ── */
-    #app {
-      position: relative;
-      z-index: 1;
-      padding: 5rem 1.5rem calc(5rem + var(--safe-bottom));
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .app-inner { max-width: 900px; margin: 0 auto; }
-
-    .app-frame {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .app-titlebar {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 12px 16px;
-      background: var(--surface2);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .tb { width: 11px; height: 11px; border-radius: 50%; }
-    .tb.r { background: #ff5f57; }
-    .tb.y { background: #ffbd2e; }
-    .tb.g { background: #28c840; }
-
-    .tb-label {
-      margin-left: auto;
-      font-size: 0.72rem;
-      color: var(--muted);
-      font-family: var(--mono);
-    }
-
-    .app-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    /* ── CAMERA PANEL ── */
-    .cam-panel {
-      background: #000;
-      position: relative;
-      min-height: 360px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-right: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    #cameraFeed {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      inset: 0;
-      display: none;
-    }
-
-    #cameraFeed.active { display: block; }
-
-    .cam-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      color: var(--muted);
-    }
-
-    .cam-ring {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      border: 2px solid rgba(0,212,170,0.35);
-      display: flex; align-items: center; justify-content: center;
-      animation: ringPulse 2.5s infinite;
-    }
-
-    .cam-placeholder p { font-size: 0.78rem; }
-
-    .cam-brackets .b {
-      position: absolute;
-      width: 22px; height: 22px;
-      border-color: var(--teal);
-      border-style: solid;
-      opacity: 0.5;
-    }
-
-    .b.tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
-    .b.tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; }
-    .b.bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; }
-    .b.br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
-
-    .cam-status-bar {
-      position: absolute;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(4,10,15,0.85);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 5px 12px;
-      font-size: 0.7rem;
-      font-family: var(--mono);
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .cam-status-bar.live { color: var(--teal); border-color: rgba(0,212,170,0.4); }
-    .cam-status-bar.thinking { color: var(--amber); border-color: rgba(245,158,11,0.4); }
-
-    /* ── CONTROLS PANEL ── */
-    .ctrl-panel {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .ctrl-row { display: flex; gap: 8px; }
-
-    .cbtn {
-      flex: 1;
-      padding: 11px 8px;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      min-height: 44px;
-    }
-
-    .cbtn:hover:not(:disabled) { border-color: var(--teal); color: var(--teal); }
-    .cbtn:disabled { opacity: 0.35; cursor: not-allowed; }
-    .cbtn.primary { background: var(--teal); border-color: var(--teal); color: #040a0f; }
-    .cbtn.primary:hover:not(:disabled) { opacity: 0.85; color: #040a0f; }
-    .cbtn.danger-btn { border-color: rgba(239,68,68,0.4); color: var(--red); }
-
-    .output-box {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-      font-size: 0.82rem;
-      line-height: 1.7;
-      color: var(--muted);
-      min-height: 120px;
-      max-height: 180px;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .out-verdict { font-weight: 700; margin-bottom: 6px; }
-    .out-handle { color: var(--teal); }
-    .out-specialist { color: var(--amber); }
-    .out-danger { color: var(--red); }
-    .out-body { color: var(--text); }
-    .out-muted { color: var(--muted); }
-
-    .listen-row {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.75rem;
-      color: var(--teal);
-      font-family: var(--mono);
-    }
-
-    .listen-row.show { display: flex; }
-
-    .wave { display: flex; align-items: center; gap: 2px; height: 20px; }
-    .wave span {
-      display: block;
-      width: 2.5px;
-      border-radius: 2px;
-      background: var(--teal);
-      animation: wave 1s ease-in-out infinite;
-    }
-    .wave span:nth-child(1) { height: 6px; animation-delay: 0s; }
-    .wave span:nth-child(2) { height: 14px; animation-delay: 0.1s; }
-    .wave span:nth-child(3) { height: 20px; animation-delay: 0.2s; }
-    .wave span:nth-child(4) { height: 12px; animation-delay: 0.3s; }
-    .wave span:nth-child(5) { height: 18px; animation-delay: 0.4s; }
-
-    /* ── AGENT UI ── */
-    .agent-wrap {
-      max-width: 600px;
-      margin: 0 auto;
-    }
+    .agent-wrap { position: relative; }
 
     .agent-cam {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 9/16;
-      background: #000;
-      border-radius: 20px;
-      overflow: hidden;
+      position: relative; width: 100%; aspect-ratio: 9/16; max-height: 80svh;
+      background: #000; border-radius: 24px; overflow: hidden;
       border: 1px solid var(--border);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,212,170,0.05);
     }
 
-    @media (max-width: 600px) {
-      .agent-cam { border-radius: 0; border-left: none; border-right: none; aspect-ratio: 9/17; }
-    }
+    @media (max-width: 520px) { .agent-cam { border-radius: 12px; } }
 
-    #cameraFeed {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-
+    #cameraFeed { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s; }
     #cameraFeed.active { opacity: 1; }
 
-    .agent-cam .b {
-      position: absolute;
-      width: 24px; height: 24px;
-      border-color: var(--teal);
-      border-style: solid;
-      opacity: 0.5;
-      z-index: 2;
+    .cam-idle {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+      background: radial-gradient(ellipse at center, #0a1520 0%, #040a0f 100%);
     }
 
-    .agent-cam .b.tl { top: 14px; left: 14px; border-width: 2px 0 0 2px; }
-    .agent-cam .b.tr { top: 14px; right: 14px; border-width: 2px 2px 0 0; }
-    .agent-cam .b.bl { bottom: 14px; left: 14px; border-width: 0 0 2px 2px; }
-    .agent-cam .b.br { bottom: 14px; right: 14px; border-width: 0 2px 2px 0; }
-
-    .agent-status-pill {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      background: rgba(4,10,15,0.82);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 7px 16px;
-      font-size: 0.78rem;
-      font-family: var(--mono);
-      color: var(--text);
-      white-space: nowrap;
+    .cam-idle-ring {
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 2px solid rgba(0,212,170,0.25);
+      display: flex; align-items: center; justify-content: center;
+      animation: ringPulse 3s infinite;
     }
 
-    .status-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--muted);
-      flex-shrink: 0;
+    .cam-idle p { font-size: 0.8rem; color: var(--muted); }
+
+    /* corner brackets */
+    .agent-cam .b { position: absolute; width: 26px; height: 26px; border-color: var(--teal); border-style: solid; opacity: 0.45; z-index: 4; }
+    .agent-cam .b.tl { top: 16px; left: 16px; border-width: 2px 0 0 2px; }
+    .agent-cam .b.tr { top: 16px; right: 16px; border-width: 2px 2px 0 0; }
+    .agent-cam .b.bl { bottom: 16px; left: 16px; border-width: 0 0 2px 2px; }
+    .agent-cam .b.br { bottom: 16px; right: 16px; border-width: 0 2px 2px 0; }
+
+    /* status pill */
+    .status-pill {
+      position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; align-items: center; gap: 7px;
+      background: rgba(4,10,15,0.82); backdrop-filter: blur(12px);
+      border: 1px solid var(--border); border-radius: 100px;
+      padding: 7px 16px; font-size: 0.75rem; font-family: var(--mono);
+      color: var(--text); white-space: nowrap;
     }
 
-    .status-dot.listening { background: var(--teal); animation: pulse 1s infinite; box-shadow: 0 0 8px var(--teal); }
-    .status-dot.thinking  { background: var(--amber); animation: pulse 0.6s infinite; }
-    .status-dot.speaking  { background: #a78bfa; animation: pulse 0.8s infinite; }
-    .status-dot.live      { background: var(--teal); }
+    .sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; transition: background 0.3s; }
+    .sdot.listen { background: var(--teal); animation: pulse 1s infinite; box-shadow: 0 0 8px var(--teal); }
+    .sdot.think { background: var(--amber); animation: pulse 0.6s infinite; }
+    .sdot.speak { background: #a78bfa; animation: pulse 0.8s infinite; }
+    .sdot.live { background: var(--teal); }
 
+    /* waveform */
     .agent-wave {
-      position: absolute;
-      bottom: 140px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      height: 36px;
-      opacity: 0;
-      transition: opacity 0.3s;
+      position: absolute; bottom: 168px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; align-items: center; gap: 4px; height: 40px;
+      opacity: 0; transition: opacity 0.3s;
     }
 
     .agent-wave.show { opacity: 1; }
 
     .agent-wave span {
-      display: block;
-      width: 4px;
-      border-radius: 3px;
-      background: var(--teal);
-      box-shadow: 0 0 8px var(--teal);
+      display: block; width: 4px; border-radius: 3px;
+      background: var(--teal); box-shadow: 0 0 8px rgba(0,212,170,0.5);
       animation: wave 1s ease-in-out infinite;
     }
+    .agent-wave span:nth-child(1){height:8px;animation-delay:0s}
+    .agent-wave span:nth-child(2){height:20px;animation-delay:.1s}
+    .agent-wave span:nth-child(3){height:32px;animation-delay:.2s}
+    .agent-wave span:nth-child(4){height:40px;animation-delay:.3s}
+    .agent-wave span:nth-child(5){height:30px;animation-delay:.4s}
+    .agent-wave span:nth-child(6){height:18px;animation-delay:.5s}
+    .agent-wave span:nth-child(7){height:8px;animation-delay:.6s}
 
-    .agent-wave span:nth-child(1) { height: 10px; animation-delay: 0s; }
-    .agent-wave span:nth-child(2) { height: 22px; animation-delay: 0.1s; }
-    .agent-wave span:nth-child(3) { height: 30px; animation-delay: 0.2s; }
-    .agent-wave span:nth-child(4) { height: 36px; animation-delay: 0.3s; }
-    .agent-wave span:nth-child(5) { height: 28px; animation-delay: 0.4s; }
-    .agent-wave span:nth-child(6) { height: 18px; animation-delay: 0.5s; }
-    .agent-wave span:nth-child(7) { height: 10px; animation-delay: 0.6s; }
-
-    .verdict-overlay {
-      position: absolute;
-      top: 60px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: 100px;
-      opacity: 0;
-      transition: opacity 0.4s;
+    /* verdict badge */
+    .verdict-badge {
+      position: absolute; top: 62px; left: 50%; transform: translateX(-50%);
+      z-index: 10; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 5px 14px; border-radius: 100px;
+      opacity: 0; transition: opacity 0.4s; white-space: nowrap;
     }
+    .verdict-badge.show { opacity: 1; }
+    .verdict-badge.handle { background: rgba(0,212,170,0.18); color: var(--teal); border: 1px solid rgba(0,212,170,0.4); }
+    .verdict-badge.specialist { background: rgba(245,158,11,0.18); color: var(--amber); border: 1px solid rgba(245,158,11,0.4); }
+    .verdict-badge.danger { background: rgba(239,68,68,0.22); color: var(--red); border: 1px solid rgba(239,68,68,0.5); }
 
-    .verdict-overlay.show { opacity: 1; }
-    .verdict-overlay.handle { background: rgba(0,212,170,0.2); color: var(--teal); border: 1px solid rgba(0,212,170,0.4); }
-    .verdict-overlay.specialist { background: rgba(245,158,11,0.2); color: var(--amber); border: 1px solid rgba(245,158,11,0.4); }
-    .verdict-overlay.danger { background: rgba(239,68,68,0.25); color: var(--red); border: 1px solid rgba(239,68,68,0.5); }
-
+    /* response card */
     .response-card {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      z-index: 10;
-      background: linear-gradient(to top, rgba(4,10,15,0.97) 60%, transparent);
-      padding: 48px 20px 20px;
-      transform: translateY(100%);
-      transition: transform 0.4s ease;
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+      background: linear-gradient(to top, rgba(4,10,15,0.98) 55%, transparent);
+      padding: 56px 22px 22px;
+      transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .response-card.show { transform: translateY(0); }
 
-    .response-text {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: var(--text);
-      max-height: 160px;
-      overflow-y: auto;
+    .response-text { font-size: 0.88rem; line-height: 1.65; color: var(--text); max-height: 170px; overflow-y: auto; }
+
+    /* step list inside response */
+    .step-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+
+    .step-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 10px; border-radius: 8px;
+      font-size: 0.82rem; line-height: 1.5;
+      background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.12); color: var(--text);
     }
 
-    .agent-controls {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      padding: 20px 0 0;
-    }
+    .step-n { font-weight: 700; color: var(--teal); flex-shrink: 0; font-family: var(--mono); font-size: 0.75rem; margin-top: 1px; }
 
-    .agent-btn {
-      padding: 14px 36px;
-      border-radius: 100px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-      min-width: 160px;
-    }
+    /* agent controls */
+    .agent-controls { display: flex; justify-content: center; gap: 12px; padding: 20px 0 0; }
 
-    .start-btn {
-      background: var(--teal);
-      color: #040a0f;
-      box-shadow: 0 8px 30px rgba(0,212,170,0.35);
-    }
+    .agent-btn { padding: 15px 40px; border-radius: 100px; font-size: 1rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; min-width: 170px; }
 
-    .start-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .start-btn { background: var(--teal); color: #040a0f; box-shadow: 0 10px 40px rgba(0,212,170,0.35); }
+    .start-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 48px rgba(0,212,170,0.45); }
 
-    .stop-btn {
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
+    .stop-btn { background: var(--surface); color: var(--text); border: 1px solid var(--border); display: none; }
     .stop-btn:hover { border-color: var(--red); color: var(--red); }
 
     /* ── INSTALL BANNER ── */
     #installBanner {
-      display: none;
-      position: fixed;
-      bottom: calc(20px + var(--safe-bottom));
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 200;
-      background: var(--surface);
-      border: 1px solid rgba(0,212,170,0.4);
-      border-radius: 14px;
-      padding: 16px 20px;
-      width: calc(100% - 2rem);
-      max-width: 400px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      display: none; position: fixed; bottom: calc(20px + var(--safe-bottom)); left: 50%; transform: translateX(-50%);
+      z-index: 200; background: var(--surface); border: 1px solid rgba(0,212,170,0.4); border-radius: 14px;
+      padding: 16px 20px; width: calc(100% - 2rem); max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
-
     #installBanner.show { display: flex; align-items: center; gap: 14px; }
-
-    .install-text { flex: 1; }
     .install-text strong { display: block; font-size: 0.9rem; margin-bottom: 2px; }
     .install-text span { font-size: 0.78rem; color: var(--muted); }
-
-    .install-btn {
-      background: var(--teal);
-      color: #040a0f;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .install-close {
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: 1.1rem;
-      padding: 4px;
-    }
+    .install-btn { background: var(--teal); color: #040a0f; border: none; padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .install-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; padding: 4px; margin-left: auto; }
 
     /* ── CTA ── */
-    .cta {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 7rem 1.5rem;
-    }
-
-    .cta h2 { font-size: clamp(1.8rem, 4vw, 2.75rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
-    .cta p { color: var(--muted); margin-bottom: 2rem; font-size: 1rem; }
+    .cta { position: relative; z-index: 1; text-align: center; padding: 7rem 1.5rem; }
+    .cta h2 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; letter-spacing: -0.04em; margin-bottom: 0.75rem; }
+    .cta p { color: var(--muted); margin-bottom: 2rem; font-size: 1.05rem; max-width: 420px; margin-left: auto; margin-right: auto; }
 
     /* ── FOOTER ── */
-    footer {
-      position: relative;
-      z-index: 1;
-      border-top: 1px solid var(--border);
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.78rem;
-      color: var(--muted);
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 1.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: var(--muted); flex-wrap: wrap; gap: 0.75rem; }
     footer .fl { font-weight: 700; color: var(--text); }
     footer a { color: inherit; text-decoration: none; }
     footer a:hover { color: var(--teal); }
 
-    /* ── SPINNER ── */
-    .spinner {
-      width: 13px; height: 13px;
-      border: 2px solid rgba(0,212,170,0.3);
-      border-top-color: var(--teal);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      flex-shrink: 0;
-    }
-
     /* ── ANIMATIONS ── */
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
-    @keyframes ringPulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,212,170,0.3)} 50%{box-shadow:0 0 0 14px rgba(0,212,170,0)} }
-    @keyframes wave { 0%,100%{transform:scaleY(0.4)} 50%{transform:scaleY(1)} }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    @keyframes ringPulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,212,170,0.25)} 50%{box-shadow:0 0 0 18px rgba(0,212,170,0)} }
+    @keyframes wave { 0%,100%{transform:scaleY(0.35)} 50%{transform:scaleY(1)} }
     @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
-    .cursor { display:inline-block; width:2px; height:13px; background:var(--teal); margin-left:2px; animation:blink 1s infinite; vertical-align:middle; }
+    .spinner { width: 13px; height: 13px; border: 2px solid rgba(0,212,170,0.25); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
 
     /* ── SCROLL REVEAL ── */
-    .reveal { opacity:0; transform:translateY(18px); transition:opacity 0.5s, transform 0.5s; }
-    .reveal.on { opacity:1; transform:translateY(0); }
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.55s, transform 0.55s; }
+    .reveal.on { opacity: 1; transform: translateY(0); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
-      .app-grid { grid-template-columns: 1fr; }
-      .cam-panel { min-height: 240px; border-right: none; border-bottom: 1px solid var(--border); }
-      .how-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .how-grid { grid-template-columns: 1fr; gap: 2rem; }
       .how-grid::before { display: none; }
       .verdicts-grid { grid-template-columns: 1fr; }
-      nav .nav-ghost { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: 1fr; }
+      .nav-link { display: none; }
     }
   </style>
 </head>
@@ -836,170 +409,291 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo"><div class="nav-dot"></div>FixGuide AI</div>
+  <a href="#" class="logo"><div class="logo-dot"></div>FixGuide AI</a>
   <div class="nav-right">
-    <a href="https://github.com/Evode-Manirahari/fixguide-ai" target="_blank" class="nav-ghost">GitHub</a>
-    <a href="#app" class="nav-btn">Try Live →</a>
+    <a href="#how" class="nav-link">How it works</a>
+    <a href="#pricing" class="nav-link">Pricing</a>
+    <a href="#agent" class="nav-cta">Try Free →</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="badge"><div class="badge-dot"></div>Cactus × Google DeepMind · Voice Agents Hackathon 2026</div>
-  <h1>Your expert.<br><span class="accent">In your ear.</span></h1>
-  <p class="hero-sub">Point your camera at any physical problem. FixGuide AI sees it, reasons about it, and talks you through exactly what to do — step by step.</p>
-  <p class="hero-quote">Like Neo downloading kung fu — point, listen, do.</p>
+  <div class="hero-eyebrow"><div class="eyebrow-dot"></div>Powered by Google DeepMind · Cactus YC S25</div>
+  <h1>Stop paying $200<br>for a <span class="grad">service call</span><br>you didn't need.</h1>
+  <p class="hero-sub">Point your camera at any home problem. FixGuide AI sees it, reasons about it, and talks you through exactly what to do — step by step.</p>
+  <p class="hero-quote">Like having an expert friend on speed dial. 24/7. For free.</p>
   <div class="hero-btns">
-    <a href="#app" class="btn-primary">
+    <a href="#agent" class="btn-primary">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      Try Live
+      Try Free Now
     </a>
-    <a href="https://github.com/Evode-Manirahari/fixguide-ai" target="_blank" class="btn-secondary">View on GitHub</a>
+    <a href="#pricing" class="btn-secondary">See Pricing</a>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <span class="trust-label">Built with</span>
+  <div class="trust-items">
+    <div class="trust-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Gemini 2.0 Flash Vision
+    </div>
+    <div class="trust-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Gemma 270M On-Device
+    </div>
+    <div class="trust-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Cactus Inference Engine
+    </div>
+    <div class="trust-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      On-Device Private
+    </div>
+  </div>
+</div>
+
+<!-- STAT ROW -->
+<div class="stat-row reveal">
+  <div class="stat-card">
+    <div class="stat-num">$200</div>
+    <div class="stat-desc">Average plumber<br>service call fee</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">68%</div>
+    <div class="stat-desc">Of home repairs<br>are DIY-able</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">&lt;30s</div>
+    <div class="stat-desc">To get expert<br>guidance with AI</div>
+  </div>
+</div>
+
+<!-- USE CASES -->
 <div class="section reveal">
+  <div class="section-label">Real problems it solves</div>
+  <h2 class="section-title">Point it at anything.</h2>
+  <p class="section-sub">FixGuide handles the situations that make you panic-search YouTube at midnight.</p>
+  <div class="cases-grid">
+    <div class="case-card">
+      <div class="case-top">
+        <div class="case-icon">💧</div>
+        <span class="case-cost">~$180 plumber</span>
+      </div>
+      <div class="case-title">Leaking pipe under the sink</div>
+      <div class="case-desc">Dripping compression fitting, slow leak from P-trap, or damp cabinet floor.</div>
+      <div class="case-verdict">✓ Usually DIY — tighten or replace fitting in 10 min</div>
+    </div>
+    <div class="case-card">
+      <div class="case-top">
+        <div class="case-icon">⚡</div>
+        <span class="case-cost">~$250 electrician</span>
+      </div>
+      <div class="case-title">Tripping circuit breaker</div>
+      <div class="case-desc">Breaker keeps flipping, outlet stopped working, or GFCI won't reset.</div>
+      <div class="case-verdict">✓ Often fixable — overload diagnosis in seconds</div>
+    </div>
+    <div class="case-card">
+      <div class="case-top">
+        <div class="case-icon">🔥</div>
+        <span class="case-cost">~$350 HVAC tech</span>
+      </div>
+      <div class="case-title">Furnace not heating</div>
+      <div class="case-desc">No warm air, pilot light out, thermostat showing wrong temp.</div>
+      <div class="case-verdict">✓ Filter or igniter — most fixes under $20</div>
+    </div>
+    <div class="case-card">
+      <div class="case-top">
+        <div class="case-icon">🚿</div>
+        <span class="case-cost">~$150 plumber</span>
+      </div>
+      <div class="case-title">Low water pressure</div>
+      <div class="case-desc">Weak shower, slow-filling toilet, or sudden pressure drop.</div>
+      <div class="case-verdict">✓ Aerator or valve — fixed without a pro</div>
+    </div>
+    <div class="case-card">
+      <div class="case-top">
+        <div class="case-icon">🚗</div>
+        <span class="case-cost">~$120 diagnostic fee</span>
+      </div>
+      <div class="case-title">Dashboard warning light</div>
+      <div class="case-desc">Check engine, oil, battery, or brake warning lights lit up.</div>
+      <div class="case-verdict">✓ Diagnose before paying shop fees</div>
+    </div>
+    <div class="case-card">
+      <div class="case-top">
+        <div class="case-icon">🧊</div>
+        <span class="case-cost">~$200 appliance tech</span>
+      </div>
+      <div class="case-title">Fridge not cooling</div>
+      <div class="case-desc">Food going warm, freezer icing up, or compressor making noise.</div>
+      <div class="case-verdict">✓ Coil or seal issue — often a $15 fix</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section reveal" style="padding-top: 0">
   <div class="section-label">How it works</div>
   <h2 class="section-title">Three steps. Zero confusion.</h2>
-  <p class="section-sub">No manual, no searching. Just point and listen.</p>
+  <p class="section-sub">No manual. No hold music. No service window. Just point and listen.</p>
   <div class="how-grid">
     <div class="how-step">
       <div class="how-icon">📸</div>
-      <h3>Sees</h3>
-      <p>Through your camera. Identifies the problem and its state instantly.</p>
+      <h3>Point</h3>
+      <p>Aim your camera at the problem. FixGuide sees what's in front of you — the exact part, its state, and what's at risk.</p>
     </div>
     <div class="how-step">
       <div class="how-icon">🧠</div>
-      <h3>Reasons</h3>
-      <p>Powered by Gemini Vision. Understands the full picture and decides the best path.</p>
+      <h3>Speak</h3>
+      <p>Say what's going on. The AI reasons about the full picture and makes a confident call — handle it or call a pro.</p>
     </div>
     <div class="how-step">
       <div class="how-icon">🔊</div>
-      <h3>Talks</h3>
-      <p>Clear, step-by-step instructions through your earpiece. Like an expert beside you.</p>
+      <h3>Listen</h3>
+      <p>Get step-by-step guidance through your earpiece. Hands free. One step at a time. Adapts if something goes wrong.</p>
     </div>
   </div>
 </div>
 
 <!-- VERDICTS -->
-<div class="section reveal" style="padding-top:0">
+<div class="section reveal" style="padding-top: 0">
   <div class="section-label">One verdict. Always clear.</div>
   <h2 class="section-title">No ambiguity. Ever.</h2>
-  <p class="section-sub">Every situation gets exactly one of three responses.</p>
+  <p class="section-sub">Every situation gets exactly one of three answers. You always know what to do next.</p>
   <div class="verdicts-grid">
     <div class="vcard handle">
       <div class="vi">✓</div>
-      <h3>Handle it</h3>
-      <p>You can do this. Walks you through it step by step, adapting if something goes wrong.</p>
+      <h3>Handle It</h3>
+      <p>You can do this. Walks you through it step by step. Adapts if something goes wrong. Saves you the service call.</p>
     </div>
     <div class="vcard specialist">
       <div class="vi">📞</div>
-      <h3>Call specialist</h3>
-      <p>This needs a pro. You get told who, why, and how urgent — plus a work order to send.</p>
+      <h3>Call Specialist</h3>
+      <p>This needs a pro. You get told who, why, and how urgent — plus a ready-to-send work order to text a contractor.</p>
     </div>
     <div class="vcard danger">
       <div class="vi">⚠️</div>
       <h3>Danger</h3>
-      <p>Stop. Flags hazards before you make it worse — tells you what not to touch.</p>
+      <p>Stop. FixGuide flags real hazards before you make it worse. Knows when to keep you safe, not just keep you busy.</p>
     </div>
   </div>
 </div>
 
-<!-- FEATURES -->
-<div class="section reveal" style="padding-top:0">
-  <div class="section-label">Features</div>
-  <h2 class="section-title">Built for the field.</h2>
-  <p class="section-sub">Everything a field worker or homeowner needs. Nothing they don't.</p>
-  <div class="features-grid">
-    <div class="fcard"><div class="fi">🎤</div><h3>Fully hands-free</h3><p>Voice-operated end to end. Say "start" to begin — your hands never leave the work.</p></div>
-    <div class="fcard"><div class="fi">🔄</div><h3>Adaptive step tracker</h3><p>One step at a time. Describe what went wrong, get an instant fix — not a restart.</p></div>
-    <div class="fcard"><div class="fi">📋</div><h3>Instant work orders</h3><p>When a specialist is needed, get a plain-language work order ready to text in seconds.</p></div>
-    <div class="fcard"><div class="fi">🌐</div><h3>Universal</h3><p>Plumbing, electrical, HVAC, appliances, vehicles — any physical problem, any domain.</p></div>
-    <div class="fcard"><div class="fi">📱</div><h3>Works on your phone</h3><p>Install as a PWA on Android or iPhone. Use the back camera, voice, and speaker natively.</p></div>
-    <div class="fcard"><div class="fi">🗂</div><h3>Session history</h3><p>Every job logged locally. See your recent sessions on startup — verdict, description, time.</p></div>
+<!-- PRICING -->
+<div class="pricing-wrap" id="pricing">
+  <div class="pricing-inner">
+    <div class="section-label" style="text-align:center">Pricing</div>
+    <h2 class="section-title">Start free. Upgrade when it pays for itself.</h2>
+    <p class="section-sub">One prevented service call pays for a year of Pro. Easily.</p>
+    <div class="pricing-grid reveal">
+      <div class="price-card">
+        <div class="price-tag">Free forever</div>
+        <div class="price-name">Starter</div>
+        <div class="price-amount">
+          <span class="price-num">$0</span>
+          <span class="price-period">/month</span>
+        </div>
+        <div class="price-desc">Everything you need to try FixGuide on your first few jobs.</div>
+        <div class="price-features">
+          <div class="price-feature"><span class="check">✓</span>5 analyses per month</div>
+          <div class="price-feature"><span class="check">✓</span>Camera + voice input</div>
+          <div class="price-feature"><span class="check">✓</span>Step-by-step guidance</div>
+          <div class="price-feature"><span class="check">✓</span>Verdict: Handle / Specialist / Danger</div>
+          <div class="price-feature"><span class="cross">–</span><span style="color:var(--muted)">Work order generation</span></div>
+          <div class="price-feature"><span class="cross">–</span><span style="color:var(--muted)">Session history</span></div>
+          <div class="price-feature"><span class="cross">–</span><span style="color:var(--muted)">Offline mode</span></div>
+        </div>
+        <a href="#agent" class="price-cta outline">Start Free</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-tag featured-tag">⚡ Most popular</div>
+        <div class="price-name">Pro</div>
+        <div class="price-amount">
+          <span class="price-num">$9</span>
+          <span class="price-period">/month</span>
+        </div>
+        <div class="price-desc">For homeowners and field workers who want unlimited expert backup.</div>
+        <div class="price-features">
+          <div class="price-feature"><span class="check">✓</span>Unlimited analyses</div>
+          <div class="price-feature"><span class="check">✓</span>Camera + voice input</div>
+          <div class="price-feature"><span class="check">✓</span>Step-by-step guidance</div>
+          <div class="price-feature"><span class="check">✓</span>Verdict: Handle / Specialist / Danger</div>
+          <div class="price-feature"><span class="check">✓</span>Work order generation</div>
+          <div class="price-feature"><span class="check">✓</span>Full session history</div>
+          <div class="price-feature"><span class="check">✓</span>Offline mode (on-device AI)</div>
+        </div>
+        <a href="#agent" class="price-cta solid">Start 7-Day Free Trial</a>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:0.8rem;color:var(--muted);margin-top:1.25rem">No credit card required for free trial. Cancel anytime.</p>
   </div>
 </div>
 
-<!-- TECH STACK -->
-<div class="section reveal" style="padding-top:0">
-  <div class="section-label">Tech stack</div>
-  <h2 class="section-title">On-device + cloud.</h2>
-  <p class="section-sub">Cactus runs Gemma on-device. Gemini Vision handles the heavy reasoning.</p>
-  <div class="tech-grid">
-    <div class="tech-pill"><div class="td"></div>Gemma 270M · on-device</div>
-    <div class="tech-pill"><div class="td"></div>Gemini 2.0 Flash · vision</div>
-    <div class="tech-pill"><div class="td"></div>Cactus · inference engine</div>
-    <div class="tech-pill"><div class="td"></div>sounddevice · mic input</div>
-    <div class="tech-pill"><div class="td"></div>SpeechRecognition · STT</div>
-    <div class="tech-pill"><div class="td"></div>OpenCV · camera capture</div>
-    <div class="tech-pill"><div class="td"></div>Flask · backend API</div>
-    <div class="tech-pill"><div class="td"></div>Web Speech API · browser</div>
-  </div>
-</div>
-
-<!-- LIVE APP -->
-<section id="app">
-  <div class="app-inner">
+<!-- LIVE AGENT -->
+<section class="agent-section" id="agent">
+  <div class="agent-inner">
     <div class="section-label" style="text-align:center">Live agent</div>
     <h2 class="section-title">Try it right now.</h2>
-    <p class="section-sub">Tap Start. Point your camera. Speak your question. The agent responds instantly and keeps listening.</p>
+    <p class="section-sub" style="margin-bottom:2rem">Tap Start. Point your camera. Speak your question. The agent responds and keeps listening.</p>
 
-    <!-- AGENT UI -->
     <div class="agent-wrap reveal">
-
-      <!-- camera fullscreen -->
       <div class="agent-cam">
         <video id="cameraFeed" autoplay muted playsinline></video>
 
-        <!-- corner brackets -->
+        <div class="cam-idle" id="camIdle">
+          <div class="cam-idle-ring">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" stroke-width="1.5">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </div>
+          <p>Tap Start Agent below</p>
+        </div>
+
         <div class="b tl"></div><div class="b tr"></div>
         <div class="b bl"></div><div class="b br"></div>
 
-        <!-- status pill top center -->
-        <div class="agent-status-pill" id="statusPill">
-          <span class="status-dot" id="statusDot"></span>
-          <span id="statusLabel">Tap Start to begin</span>
+        <div class="status-pill">
+          <span class="sdot" id="sdot"></span>
+          <span id="slabel">Tap Start to begin</span>
         </div>
 
-        <!-- wave visualizer bottom center -->
         <div class="agent-wave" id="agentWave">
           <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
         </div>
 
-        <!-- verdict overlay -->
-        <div class="verdict-overlay" id="verdictOverlay"></div>
+        <div class="verdict-badge" id="verdictBadge"></div>
 
-        <!-- response card bottom -->
         <div class="response-card" id="responseCard">
           <div class="response-text" id="responseText"></div>
         </div>
       </div>
 
-      <!-- controls row -->
       <div class="agent-controls">
-        <button class="agent-btn stop-btn" id="btnStop" onclick="stopAgent()" style="display:none">⏹ Stop</button>
+        <button class="agent-btn stop-btn" id="btnStop" onclick="stopAgent()">⏹ Stop</button>
         <button class="agent-btn start-btn" id="btnStart" onclick="startAgent()">▶ Start Agent</button>
       </div>
-
     </div>
   </div>
 </section>
 
 <!-- CTA -->
 <section class="cta reveal">
-  <h2>Ready to deploy it?</h2>
-  <p>Full source on GitHub. Run on macOS in 5 minutes.</p>
-  <div class="hero-btns">
-    <a href="https://github.com/Evode-Manirahari/fixguide-ai" target="_blank" class="btn-primary">View on GitHub</a>
-    <a href="https://github.com/Evode-Manirahari/fixguide-ai#setup" target="_blank" class="btn-secondary">Setup Guide</a>
+  <h2>Save your first $200<br>this week.</h2>
+  <p>Download FixGuide AI. Point it at your next home problem. See the difference.</p>
+  <div class="hero-btns" style="justify-content:center">
+    <a href="#agent" class="btn-primary">Try Free Now</a>
+    <a href="https://github.com/Evode-Manirahari/fixguide-ai" target="_blank" class="btn-secondary">View on GitHub</a>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <span class="fl">FixGuide AI</span>
-  <div style="display:flex;gap:1rem">
+  <div style="display:flex;gap:1.5rem">
     <a href="https://github.com/Evode-Manirahari/fixguide-ai" target="_blank">GitHub</a>
     <a href="https://cactus.run" target="_blank">Cactus</a>
     <a href="https://deepmind.google" target="_blank">Google DeepMind</a>
@@ -1011,250 +705,176 @@
 <div id="installBanner">
   <div class="install-text">
     <strong>Install FixGuide AI</strong>
-    <span>Add to home screen for the full app experience</span>
+    <span>Add to home screen for the full experience</span>
   </div>
   <button class="install-btn" onclick="doInstall()">Install</button>
   <button class="install-close" onclick="dismissInstall()">✕</button>
 </div>
 
 <script>
-  // ── service worker ──
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
-  }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
 
-  // ── PWA install ──
   let deferredPrompt = null;
-  window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('installBanner').classList.add('show');
-  });
-  function doInstall() {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => { deferredPrompt = null; dismissInstall(); });
-  }
-  function dismissInstall() {
-    document.getElementById('installBanner').classList.remove('show');
-  }
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.getElementById('installBanner').classList.add('show'); });
+  function doInstall() { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; dismissInstall(); }); }
+  function dismissInstall() { document.getElementById('installBanner').classList.remove('show'); }
 
-  // ── scroll reveal ──
-  const obs = new IntersectionObserver(
-    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }),
-    { threshold: 0.08 }
-  );
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }), { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-  // ── agent state ──
   const API = 'https://winner-vic-vhs-duration.trycloudflare.com';
-  let camStream = null;
-  let agentRunning = false;
-  let voiceRec = null;
+  let camStream = null, agentRunning = false, voiceRec = null;
 
-  // ── UI helpers ──
   function setStatus(label, dotClass) {
-    document.getElementById('statusLabel').textContent = label;
-    const dot = document.getElementById('statusDot');
-    dot.className = 'status-dot' + (dotClass ? ' ' + dotClass : '');
+    document.getElementById('slabel').textContent = label;
+    document.getElementById('sdot').className = 'sdot' + (dotClass ? ' ' + dotClass : '');
   }
 
-  function showWave(on) {
-    document.getElementById('agentWave').classList.toggle('show', on);
-  }
+  function showWave(on) { document.getElementById('agentWave').classList.toggle('show', on); }
 
   function showVerdict(text) {
     const u = text.toUpperCase();
-    const el = document.getElementById('verdictOverlay');
-    const dangerPhrases = ['DANGER', 'HAZARD', 'ELECTRIC SHOCK', 'GAS LEAK', 'STOP IMMEDIATELY', 'DO NOT TOUCH', 'RISK OF DEATH', 'FIRE RISK'];
-    const specialistPhrases = ['CALL A ', 'CALL AN ', 'HIRE A ', 'NEED A SPECIALIST', 'NEED A PROFESSIONAL', 'CONTACT A ', 'ELECTRICIAN', 'LICENSED PLUMBER', 'HVAC TECHNICIAN'];
-    if (dangerPhrases.some(p => u.includes(p))) {
-      el.textContent = '⚠️ DANGER'; el.className = 'verdict-overlay show danger';
-    } else if (specialistPhrases.some(p => u.includes(p))) {
-      el.textContent = '📞 CALL SPECIALIST'; el.className = 'verdict-overlay show specialist';
-    } else {
-      el.textContent = '✓ HANDLE IT'; el.className = 'verdict-overlay show handle';
-    }
+    const el = document.getElementById('verdictBadge');
+    const danger = ['DANGER','HAZARD','ELECTRIC SHOCK','GAS LEAK','STOP IMMEDIATELY','DO NOT TOUCH','RISK OF DEATH','FIRE RISK'];
+    const specialist = ['CALL A ','CALL AN ','HIRE A ','NEED A SPECIALIST','NEED A PROFESSIONAL','CONTACT A ','ELECTRICIAN','LICENSED PLUMBER','HVAC TECHNICIAN'];
+    if (danger.some(p => u.includes(p))) { el.textContent='⚠️ DANGER'; el.className='verdict-badge show danger'; }
+    else if (specialist.some(p => u.includes(p))) { el.textContent='📞 CALL SPECIALIST'; el.className='verdict-badge show specialist'; }
+    else { el.textContent='✓ HANDLE IT'; el.className='verdict-badge show handle'; }
   }
 
   function showResponse(text) {
-    document.getElementById('responseText').textContent = text;
+    const steps = extractSteps(text);
+    const rt = document.getElementById('responseText');
+    if (steps.length > 1) {
+      const intro = text.split('\n')[0];
+      rt.innerHTML = `<div style="margin-bottom:10px;color:var(--muted);font-size:0.82rem">${intro}</div><div class="step-list">${steps.map((s,i)=>`<div class="step-item"><span class="step-n">${i+1}</span>${s}</div>`).join('')}</div>`;
+    } else {
+      rt.textContent = text;
+    }
     document.getElementById('responseCard').classList.add('show');
+  }
+
+  function extractSteps(text) {
+    const steps = [];
+    for (const line of text.split('\n')) {
+      const m = line.trim().match(/^\d+[\.\)]\s*(.+)/);
+      if (m) steps.push(m[1]);
+    }
+    return steps;
   }
 
   function hideResponse() {
     document.getElementById('responseCard').classList.remove('show');
-    document.getElementById('verdictOverlay').className = 'verdict-overlay';
+    document.getElementById('verdictBadge').className = 'verdict-badge';
   }
 
   function captureFrame() {
     const feed = document.getElementById('cameraFeed');
     const c = document.createElement('canvas');
-    c.width = feed.videoWidth || 640;
-    c.height = feed.videoHeight || 480;
+    c.width = feed.videoWidth || 640; c.height = feed.videoHeight || 480;
     c.getContext('2d').drawImage(feed, 0, 0);
     return c.toDataURL('image/jpeg', 0.85).split(',')[1];
   }
 
-  // ── speak and resolve when done ──
   function speakAndWait(text) {
     return new Promise(resolve => {
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.rate = 1.05;
-      u.onend = resolve;
-      u.onerror = resolve;
+      u.onend = resolve; u.onerror = resolve;
       window.speechSynthesis.speak(u);
-      // fallback timeout in case onend doesn't fire
-      setTimeout(resolve, text.length * 65);
+      setTimeout(resolve, text.length * 70 + 1000);
     });
   }
 
-  // ── listen once and resolve with transcript ──
   function listenOnce() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SR) { resolve(''); return; }
-
-      const rec = new SR();
-      voiceRec = rec;
-      rec.continuous = false;
-      rec.interimResults = false;
-      rec.lang = 'en-US';
-
-      let resolved = false;
-      const done = (val) => {
-        if (resolved) return;
-        resolved = true;
-        voiceRec = null;
-        resolve(val);
-      };
-
-      rec.onresult = e => done(e.results[0][0].transcript.trim());
-      rec.onerror  = () => done('');
-      rec.onend    = () => done('');
-
+      const rec = new SR(); voiceRec = rec;
+      rec.continuous = false; rec.interimResults = false; rec.lang = 'en-US';
+      let done = false;
+      const finish = val => { if (done) return; done=true; voiceRec=null; resolve(val); };
+      rec.onresult = e => finish(e.results[0][0].transcript.trim());
+      rec.onerror = () => finish('');
+      rec.onend = () => finish('');
       rec.start();
     });
   }
 
-  // ── analyze via backend ──
-  async function analyze(question) {
-    const body = { question };
-    if (camStream) body.image = captureFrame();
-    const res = await fetch(`${API}/analyze`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+  async function callAPI(endpoint, body) {
+    const res = await fetch(`${API}/${endpoint}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     return data.text;
   }
 
-  async function followup(question, context) {
-    const res = await fetch(`${API}/followup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, context }),
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    return data.text;
-  }
-
-  // ── main agent loop ──
   async function agentLoop() {
     let context = '';
-
     while (agentRunning) {
-      // 1. listen
-      setStatus('Listening...', 'listening');
+      setStatus('Listening...', 'listen');
       showWave(true);
       hideResponse();
 
       const heard = await listenOnce();
       showWave(false);
-
       if (!agentRunning) break;
-      if (!heard) {
-        setStatus('Didn\'t catch that — try again', 'live');
-        continue;
-      }
 
-      // 2. analyze
-      setStatus('Thinking...', 'thinking');
+      if (!heard) { setStatus('Didn\'t catch that — try again', 'live'); continue; }
+
+      setStatus('Thinking...', 'think');
       try {
-        let reply;
-        if (context) {
-          reply = await followup(heard, context);
-        } else {
-          reply = await analyze(heard);
-        }
-        context = reply;
+        const body = { question: heard };
+        if (camStream) body.image = captureFrame();
 
-        // 3. show + speak
+        const reply = context
+          ? await callAPI('followup', { question: heard, context })
+          : await callAPI('analyze', body);
+
+        context = reply;
         showVerdict(reply);
         showResponse(reply);
-        setStatus('Speaking...', 'speaking');
+        setStatus('Speaking...', 'speak');
         await speakAndWait(reply);
-
         if (!agentRunning) break;
-        setStatus('Listening...', 'listening');
-
       } catch (err) {
-        const msg = 'Connection error. Make sure the server is running.';
+        const msg = 'Connection error. Check that the server is running.';
         showResponse(msg);
-        setStatus('Error — retrying...', '');
+        setStatus('Error', '');
         await speakAndWait(msg);
         await new Promise(r => setTimeout(r, 2000));
       }
     }
   }
 
-  // ── start / stop ──
   async function startAgent() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) {
-      alert('Voice input requires Chrome on Android. Open this page in Chrome.');
-      return;
-    }
+    if (!SR) { alert('Open this page in Chrome on Android for voice support.'); return; }
 
     document.getElementById('btnStart').style.display = 'none';
     document.getElementById('btnStop').style.display = 'inline-block';
     agentRunning = true;
 
-    // start camera
     try {
-      camStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } },
-        audio: false,
-      });
+      camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } }, audio: false });
       const feed = document.getElementById('cameraFeed');
       feed.srcObject = camStream;
       feed.classList.add('active');
-    } catch (e) {
-      // camera denied — run without it
-    }
+      document.getElementById('camIdle').style.display = 'none';
+    } catch(e) {}
 
-    setStatus('Agent active — speak anytime', 'live');
+    setStatus('Agent active', 'live');
     await speakAndWait('Ready. Point your camera and tell me what you see.');
     agentLoop();
   }
 
   function stopAgent() {
     agentRunning = false;
-    if (voiceRec) { try { voiceRec.stop(); } catch(e){} voiceRec = null; }
+    if (voiceRec) { try { voiceRec.stop(); } catch(e){} voiceRec=null; }
     window.speechSynthesis.cancel();
-    if (camStream) {
-      camStream.getTracks().forEach(t => t.stop());
-      camStream = null;
-      const feed = document.getElementById('cameraFeed');
-      feed.srcObject = null;
-      feed.classList.remove('active');
-    }
-    hideResponse();
-    showWave(false);
+    if (camStream) { camStream.getTracks().forEach(t=>t.stop()); camStream=null; const f=document.getElementById('cameraFeed'); f.srcObject=null; f.classList.remove('active'); }
+    document.getElementById('camIdle').style.display = 'flex';
+    hideResponse(); showWave(false);
     setStatus('Tap Start to begin', '');
     document.getElementById('btnStop').style.display = 'none';
     document.getElementById('btnStart').style.display = 'inline-block';
