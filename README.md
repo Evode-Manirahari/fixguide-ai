@@ -1,6 +1,6 @@
 # FixGuide AI
 
-> *Like Neo downloading kung fu — point, listen, do.*
+> *Act on what you see.*
 
 An on-device voice + vision AI agent that sees what's in front of you, reasons about it instantly, and talks you through exactly what to do — step by step, through your earpiece.
 
